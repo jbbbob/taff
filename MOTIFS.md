@@ -1,0 +1,305 @@
+# MOTIFS.md — dump auto-généré de l'arborescence
+
+> ⚠️ Fichier régénéré par `node scripts/generate-motifs.js`. Ne pas éditer à la main.
+
+## Contexte global
+
+- **COMPTE** (`compte`) : ACTIF / RADIÉ
+- **STATUT** (`statut`) : A/C / PL
+
+## Arbre
+
+*Racine* : (sans titre)
+
+### ANV (`anv`)
+
+- *inputs* : date(text), date(text) *[si statut=PL, motif-id=motif-14-liquidation-judiciaire-cia]*, date-liq(text) *[si statut=PL, motif-id=motif-14-liquidation-judiciaire-cia]*
+- *MOTIF* :
+  - `motif-11-insolvabilite` — **11 - INSOLVABILITÉ**
+    - *SOUS-MOTIF* :
+      - `sous-motif-01-pv-carence` — **01 - PV DE CARENCE**
+        - [multi] `post-it-ti` — **POST-IT PORTAIL TI** *[si statut=A/C]*
+          - bloc `ged-ac` : « {{motif-prefix}} {{motif-code}} SS MOTIF {{sous-motif-code}} {{sous-motif-abbrev}} GED DU {{date}} »
+          - bloc `dretaf-line-ac` *[si dretaf=oui]* : « DRETAF CO {{co-number}} pour passer ANV »
+          - bloc `suspen-line-ac` *[si suspen=oui]* : « ANV SUSPEN pour exigibilité inférieure à un an »
+        - [composite] `commentaire-watt-ac` — **COMMENTAIRE AFFAIRE WATT** *[si statut=A/C]*
+          - combine: ged-ac + suspen-line-ac + dretaf-line-ac
+        - [multi] `post-it-esdc` — **POST-IT ESDC** *[si statut=PL]*
+          - bloc `carence-pl` : « {{motif-prefix}}{{motif-code}}: CARENCE-CONSTAT DU {{date}} - {{sous-motif-abbrev}} »
+          - bloc `dretaf-line-pl` *[si dretaf=oui]* : « DRETAF CO {{co-number}} pour passer ANV »
+          - bloc `suspen-line-pl` *[si suspen=oui]* : « ANV SUSPEN pour exigibilité inférieure à un an »
+        - [composite] `commentaire-watt-pl` — **COMMENTAIRE AFFAIRE WATT** *[si statut=PL]*
+          - combine: carence-pl + suspen-line-pl + dretaf-line-pl
+      - `sous-motif-02-s-att-negative` — **02 - S ATT NÉGATIVE**
+        - [multi] `post-it-ti` — **POST-IT PORTAIL TI** *[si statut=A/C]*
+          - bloc `ged-ac` : « {{motif-prefix}} {{motif-code}} SS MOTIF {{sous-motif-code}} {{sous-motif-abbrev}} GED DU {{date}} »
+          - bloc `dretaf-line-ac` *[si dretaf=oui]* : « DRETAF CO {{co-number}} pour passer ANV »
+          - bloc `suspen-line-ac` *[si suspen=oui]* : « ANV SUSPEN pour exigibilité inférieure à un an »
+        - [composite] `commentaire-watt-ac` — **COMMENTAIRE AFFAIRE WATT** *[si statut=A/C]*
+          - combine: ged-ac + suspen-line-ac + dretaf-line-ac
+        - [multi] `post-it-esdc` — **POST-IT ESDC** *[si statut=PL]*
+          - bloc `carence-pl` : « {{motif-prefix}}{{motif-code}}: CARENCE-CONSTAT DU {{date}} - {{sous-motif-abbrev}} »
+          - bloc `dretaf-line-pl` *[si dretaf=oui]* : « DRETAF CO {{co-number}} pour passer ANV »
+          - bloc `suspen-line-pl` *[si suspen=oui]* : « ANV SUSPEN pour exigibilité inférieure à un an »
+        - [composite] `commentaire-watt-pl` — **COMMENTAIRE AFFAIRE WATT** *[si statut=PL]*
+          - combine: carence-pl + suspen-line-pl + dretaf-line-pl
+      - `sous-motif-06-certificat-irrecouvrabilite` — **06 - CERTIFICAT D’IRRÉCOUVRABILITÉ**
+        - [multi] `post-it-ti` — **POST-IT PORTAIL TI** *[si statut=A/C]*
+          - bloc `ged-ac` : « {{motif-prefix}} {{motif-code}} SS MOTIF {{sous-motif-code}} {{sous-motif-abbrev}} GED DU {{date}} »
+          - bloc `dretaf-line-ac` *[si dretaf=oui]* : « DRETAF CO {{co-number}} pour passer ANV »
+          - bloc `suspen-line-ac` *[si suspen=oui]* : « ANV SUSPEN pour exigibilité inférieure à un an »
+        - [composite] `commentaire-watt-ac` — **COMMENTAIRE AFFAIRE WATT** *[si statut=A/C]*
+          - combine: ged-ac + suspen-line-ac + dretaf-line-ac
+        - [multi] `post-it-esdc` — **POST-IT ESDC** *[si statut=PL]*
+          - bloc `carence-pl` : « {{motif-prefix}}{{motif-code}}: CARENCE-CONSTAT DU {{date}} - {{sous-motif-abbrev}} »
+          - bloc `dretaf-line-pl` *[si dretaf=oui]* : « DRETAF CO {{co-number}} pour passer ANV »
+          - bloc `suspen-line-pl` *[si suspen=oui]* : « ANV SUSPEN pour exigibilité inférieure à un an »
+        - [composite] `commentaire-watt-pl` — **COMMENTAIRE AFFAIRE WATT** *[si statut=PL]*
+          - combine: carence-pl + suspen-line-pl + dretaf-line-pl
+      - `sous-motif-11-ficoba-negatif` — **11 - FICOBA NÉGATIF**
+        - [multi] `post-it-ti` — **POST-IT PORTAIL TI** *[si statut=A/C]*
+          - bloc `ged-ac` : « {{motif-prefix}} {{motif-code}} SS MOTIF {{sous-motif-code}} {{sous-motif-abbrev}} GED DU {{date}} »
+          - bloc `dretaf-line-ac` *[si dretaf=oui]* : « DRETAF CO {{co-number}} pour passer ANV »
+          - bloc `suspen-line-ac` *[si suspen=oui]* : « ANV SUSPEN pour exigibilité inférieure à un an »
+        - [composite] `commentaire-watt-ac` — **COMMENTAIRE AFFAIRE WATT** *[si statut=A/C]*
+          - combine: ged-ac + suspen-line-ac + dretaf-line-ac
+        - [multi] `post-it-esdc` — **POST-IT ESDC** *[si statut=PL]*
+          - bloc `carence-pl` : « {{motif-prefix}}{{motif-code}}: CARENCE-CONSTAT DU {{date}} - {{sous-motif-abbrev}} »
+          - bloc `dretaf-line-pl` *[si dretaf=oui]* : « DRETAF CO {{co-number}} pour passer ANV »
+          - bloc `suspen-line-pl` *[si suspen=oui]* : « ANV SUSPEN pour exigibilité inférieure à un an »
+        - [composite] `commentaire-watt-pl` — **COMMENTAIRE AFFAIRE WATT** *[si statut=PL]*
+          - combine: carence-pl + suspen-line-pl + dretaf-line-pl
+  - `motif-12-psa` — **12 - PSA**
+    - *SOUS-MOTIF* :
+      - `sous-motif-12-20-pv-659` — **20 - PV 659** *[si statut=A/C]*
+        - [multi] `post-it-ti-12` — **POST-IT PORTAIL TI** *[si statut=A/C]*
+          - bloc `ged-ac-12` : « {{motif-prefix}} {{motif-code}} SS MOTIF {{sous-motif-code}} {{sous-motif-abbrev}} GED DU {{date}} {{phrase-eopps}} »
+          - bloc `dretaf-line-ac-12` *[si dretaf=oui]* : « DRETAF CO {{co-number}} pour passer ANV »
+          - bloc `suspen-line-ac-12` *[si suspen=oui]* : « ANV SUSPEN pour exigibilité inférieure à un an »
+        - [composite] `commentaire-watt-ac-12` — **COMMENTAIRE AFFAIRE WATT** *[si statut=A/C]*
+          - combine: ged-ac-12 + suspen-line-ac-12 + dretaf-line-ac-12
+          - appendFragments: ficoba-line-12
+        - [multi] `post-it-esdc-12` — **POST-IT ESDC** *[si statut=PL]*
+          - bloc `carence-pl-12` : « {{motif-prefix}}{{motif-code}} : RECHERCHES NEGATIVES - CONSTAT DU {{date}} - {{sous-motif-abbrev}} »
+          - bloc `dretaf-line-pl-12` *[si dretaf=oui]* : « DRETAF CO {{co-number}} pour passer ANV »
+          - bloc `suspen-line-pl-12` *[si suspen=oui]* : « ANV SUSPEN pour exigibilité inférieure à un an »
+        - [composite] `commentaire-watt-pl-12` — **COMMENTAIRE AFFAIRE WATT** *[si statut=PL]*
+          - combine: carence-pl-12 + suspen-line-pl-12 + dretaf-line-pl-12
+          - appendFragments: ficoba-line-12
+        - [fragment] `ficoba-line-12` — **** *[si ficoba=non]*
+          - fragment : « (Pas de FICOBA car site KO) »
+      - `sous-motif-12-25-enq-psa` — **25 - ENQ PSA/ETRANG** *[si statut=A/C]*
+        - [multi] `post-it-ti-12` — **POST-IT PORTAIL TI** *[si statut=A/C]*
+          - bloc `ged-ac-12` : « {{motif-prefix}} {{motif-code}} SS MOTIF {{sous-motif-code}} {{sous-motif-abbrev}} GED DU {{date}} {{phrase-eopps}} »
+          - bloc `dretaf-line-ac-12` *[si dretaf=oui]* : « DRETAF CO {{co-number}} pour passer ANV »
+          - bloc `suspen-line-ac-12` *[si suspen=oui]* : « ANV SUSPEN pour exigibilité inférieure à un an »
+        - [composite] `commentaire-watt-ac-12` — **COMMENTAIRE AFFAIRE WATT** *[si statut=A/C]*
+          - combine: ged-ac-12 + suspen-line-ac-12 + dretaf-line-ac-12
+          - appendFragments: ficoba-line-12
+        - [multi] `post-it-esdc-12` — **POST-IT ESDC** *[si statut=PL]*
+          - bloc `carence-pl-12` : « {{motif-prefix}}{{motif-code}} : RECHERCHES NEGATIVES - CONSTAT DU {{date}} - {{sous-motif-abbrev}} »
+          - bloc `dretaf-line-pl-12` *[si dretaf=oui]* : « DRETAF CO {{co-number}} pour passer ANV »
+          - bloc `suspen-line-pl-12` *[si suspen=oui]* : « ANV SUSPEN pour exigibilité inférieure à un an »
+        - [composite] `commentaire-watt-pl-12` — **COMMENTAIRE AFFAIRE WATT** *[si statut=PL]*
+          - combine: carence-pl-12 + suspen-line-pl-12 + dretaf-line-pl-12
+          - appendFragments: ficoba-line-12
+        - [fragment] `ficoba-line-12` — **** *[si ficoba=non]*
+          - fragment : « (Pas de FICOBA car site KO) »
+      - `sous-motif-12-pl-pv-659` — **PV 659** *[si statut=PL]*
+        - [multi] `post-it-ti-12` — **POST-IT PORTAIL TI** *[si statut=A/C]*
+          - bloc `ged-ac-12` : « {{motif-prefix}} {{motif-code}} SS MOTIF {{sous-motif-code}} {{sous-motif-abbrev}} GED DU {{date}} {{phrase-eopps}} »
+          - bloc `dretaf-line-ac-12` *[si dretaf=oui]* : « DRETAF CO {{co-number}} pour passer ANV »
+          - bloc `suspen-line-ac-12` *[si suspen=oui]* : « ANV SUSPEN pour exigibilité inférieure à un an »
+        - [composite] `commentaire-watt-ac-12` — **COMMENTAIRE AFFAIRE WATT** *[si statut=A/C]*
+          - combine: ged-ac-12 + suspen-line-ac-12 + dretaf-line-ac-12
+          - appendFragments: ficoba-line-12
+        - [multi] `post-it-esdc-12` — **POST-IT ESDC** *[si statut=PL]*
+          - bloc `carence-pl-12` : « {{motif-prefix}}{{motif-code}} : RECHERCHES NEGATIVES - CONSTAT DU {{date}} - {{sous-motif-abbrev}} »
+          - bloc `dretaf-line-pl-12` *[si dretaf=oui]* : « DRETAF CO {{co-number}} pour passer ANV »
+          - bloc `suspen-line-pl-12` *[si suspen=oui]* : « ANV SUSPEN pour exigibilité inférieure à un an »
+        - [composite] `commentaire-watt-pl-12` — **COMMENTAIRE AFFAIRE WATT** *[si statut=PL]*
+          - combine: carence-pl-12 + suspen-line-pl-12 + dretaf-line-pl-12
+          - appendFragments: ficoba-line-12
+        - [fragment] `ficoba-line-12` — **** *[si ficoba=non]*
+          - fragment : « (Pas de FICOBA car site KO) »
+      - `sous-motif-12-pl-md-psa` — **MD PSA** *[si statut=PL]*
+        - [multi] `post-it-ti-12` — **POST-IT PORTAIL TI** *[si statut=A/C]*
+          - bloc `ged-ac-12` : « {{motif-prefix}} {{motif-code}} SS MOTIF {{sous-motif-code}} {{sous-motif-abbrev}} GED DU {{date}} {{phrase-eopps}} »
+          - bloc `dretaf-line-ac-12` *[si dretaf=oui]* : « DRETAF CO {{co-number}} pour passer ANV »
+          - bloc `suspen-line-ac-12` *[si suspen=oui]* : « ANV SUSPEN pour exigibilité inférieure à un an »
+        - [composite] `commentaire-watt-ac-12` — **COMMENTAIRE AFFAIRE WATT** *[si statut=A/C]*
+          - combine: ged-ac-12 + suspen-line-ac-12 + dretaf-line-ac-12
+          - appendFragments: ficoba-line-12
+        - [multi] `post-it-esdc-12` — **POST-IT ESDC** *[si statut=PL]*
+          - bloc `carence-pl-12` : « {{motif-prefix}}{{motif-code}} : RECHERCHES NEGATIVES - CONSTAT DU {{date}} - {{sous-motif-abbrev}} »
+          - bloc `dretaf-line-pl-12` *[si dretaf=oui]* : « DRETAF CO {{co-number}} pour passer ANV »
+          - bloc `suspen-line-pl-12` *[si suspen=oui]* : « ANV SUSPEN pour exigibilité inférieure à un an »
+        - [composite] `commentaire-watt-pl-12` — **COMMENTAIRE AFFAIRE WATT** *[si statut=PL]*
+          - combine: carence-pl-12 + suspen-line-pl-12 + dretaf-line-pl-12
+          - appendFragments: ficoba-line-12
+        - [fragment] `ficoba-line-12` — **** *[si ficoba=non]*
+          - fragment : « (Pas de FICOBA car site KO) »
+    - *topQuestions* : FICOBA DISPONIBLE ? (`ficoba`)
+  - `motif-13-decede` — **13 - DÉCÉDÉ**
+    - *SOUS-MOTIF* :
+      - `sous-motif-13-1ere-enquete` — **1ÈRE ENQUÊTE**
+        - [simple] `post-it-13-1ere-ac` — **POST-IT PORTAIL TI ET ESDC** *[si statut=A/C]*
+          - « RECHERCHE HÉRITIERS : 1ÈRE ENQUÊTE »
+        - [simple] `post-it-13-1ere-pl` — **POST-IT ESDC** *[si statut=PL]*
+          - « RECHERCHE HÉRITIERS : 1ÈRE ENQUÊTE »
+        - [multi] `watt-13-1ere-ac` — **COMMENTAIRE AFFAIRE WATT** *[si statut=A/C]*
+          - bloc `ratt-1ere-ac` : « CCA rattaché à l'affaire<br>Succession vacantes rattaché à l'affaire<br>Mail au chambre des notaires rattaché à l'affaire<br>Courrier aux héritiers envoyé par voie postale »
+          - bloc `anv-1ere-ac` : « ANV 13 DCD SUSPEN au {{date}} -&gt; RECHERCHE HÉRITIERS : 1ÈRE ENQUÊTE<br>+<br>ARRET MOTIF 25 »
+        - [multi] `watt-13-1ere-pl` — **COMMENTAIRE AFFAIRE WATT** *[si statut=PL]*
+          - bloc `ratt-1ere-pl` : « CCA rattaché à l'affaire<br>Succession vacantes rattaché à l'affaire<br>Mail au chambre des notaires rattaché à l'affaire<br>Courrier aux héritiers envoyé par voie postale »
+          - bloc `anv-1ere-pl` : « ANV 13 DCD SUSPEN au {{date}} -&gt; RECHERCHE HÉRITIERS : 1ÈRE ENQUÊTE<br>+<br>OPP DCD DEBUT »
+      - `sous-motif-13-relance` — **RELANCE**
+        - [multi] `post-it-13-relance-ac` — **POST-IT PORTAIL TI ET ESDC** *[si statut=A/C]*
+          - bloc `her-rel-ac` : « RECHERCHE HÉRITIERS : RELANCE »
+          - bloc `anv-rel-ac-ti` : « ANV 13 SS MOTIF 19 ENQ PAS ACTIF GED DU {{today}} »
+        - [multi] `post-it-13-relance-pl` — **POST-IT ESDC** *[si statut=PL]*
+          - bloc `her-rel-pl` : « RECHERCHE HÉRITIERS : RELANCE »
+          - bloc `anv-rel-pl-esdc` : « ANV13 : DCD - CONSTAT DU {{today}} - PAS D'HÉRITIERS &amp; ACTIF CONNU »
+        - [multi] `watt-13-relance-ac` — **COMMENTAIRE AFFAIRE WATT** *[si statut=A/C]*
+          - bloc `ratt-rel-ac` : « CCA rattaché à l'affaire<br>Succession vacantes rattaché à l'affaire<br>Mail au chambre des notaires rattaché à l'affaire<br>Courrier aux héritiers envoyé par voie postale »
+          - bloc `anv-rel-ac-watt` : « ANV 13 SS MOTIF 19 ENQ PAS ACTIF GED DU {{today}}<br>+<br>RECHERCHE HÉRITIERS : RELANCE »
+        - [multi] `watt-13-relance-pl` — **COMMENTAIRE AFFAIRE WATT** *[si statut=PL]*
+          - bloc `ratt-rel-pl` : « CCA rattaché à l'affaire<br>Succession vacantes rattaché à l'affaire<br>Mail au chambre des notaires rattaché à l'affaire<br>Courrier aux héritiers envoyé par voie postale »
+          - bloc `anv-rel-pl-watt` : « ANV13 : DCD - CONSTAT DU {{today}} - PAS D'HÉRITIERS &amp; ACTIF CONNU<br>+<br>RECHERCHE HÉRITIERS : RELANCE »
+  - `motif-14-liquidation-judiciaire-cia` — **14 - LIQUIDATION JUDICIAIRE (CIA)**
+    - [simple] `result-14-pl` — **POST-IT ESDC & COMMENTAIRE AFFAIRE WATT** *[si statut=PL]*
+      - « ANV14 : CIA DU {{date-liq}} AVIS JUGEMENT BODACC DU {{date}} »
+    - [simple] `result-14-ac` — **POST-IT PORTAIL TI & COMMENTAIRE AFFAIRE WATT** *[si statut=A/C]*
+      - « ANV 14 SS MOTIF 28 CIA JUGEMENT GED DU {{date}} »
+  - `motif-16-creance-seuil` — **16 - CRÉANCE < SEUIL 201€**
+    - [multi] `post-it-ti-16` — **POST-IT PORTAIL TI** *[si statut=A/C]*
+      - bloc `ged-ac-16` : « {{motif-prefix}} {{motif-code}} SS MOTIF 32 - CONSTAT DU {{date}} »
+      - bloc `dretaf-line-ac-16` *[si dretaf=oui]* : « DRETAF CO {{co-number}} pour passer ANV »
+      - bloc `suspen-line-ac-16` *[si suspen=oui]* : « ANV SUSPEN pour exigibilité inférieure à un an »
+    - [composite] `commentaire-watt-ac-16` — **COMMENTAIRE AFFAIRE WATT** *[si statut=A/C]*
+      - combine: ged-ac-16 + suspen-line-ac-16 + dretaf-line-ac-16
+    - [multi] `post-it-esdc-16` — **POST-IT ESDC** *[si statut=PL]*
+      - bloc `carence-pl-16` : « {{motif-prefix}}{{motif-code}} : CREANCE &lt; AU SEUIL - CONSTAT DU {{date}} »
+      - bloc `dretaf-line-pl-16` *[si dretaf=oui]* : « DRETAF CO {{co-number}} pour passer ANV »
+      - bloc `suspen-line-pl-16` *[si suspen=oui]* : « ANV SUSPEN pour exigibilité inférieure à un an »
+    - [composite] `commentaire-watt-pl-16` — **COMMENTAIRE AFFAIRE WATT** *[si statut=PL]*
+      - combine: carence-pl-16 + suspen-line-pl-16 + dretaf-line-pl-16
+- *toggles* :
+  - ☑ **AMIABLE RELDET** (`amiable-reldet`)
+    - *VERSEMENT RÉCENT* :
+      - `verse-oui` — **OUI**
+        - *inputs* : ecritures(textarea)
+        - *RAISON* :
+          - `raison-frustratoires` — **FRAIS FRUSTRATOIRES**
+            - [simple] `watt-versements` — **COMMENTAIRE AFFAIRE WATT**
+              - « Compte {{compte-display}} - Pas de risque de prescription - Plusieurs versements récents :<br>{{ecritures}}<br><br>Pas de réexécution car frais frustratoires, en attente d'autres contraintes pour fair … »
+          - `raison-insolvable` — **INSOLVABLE**
+            - [simple] `watt-versements` — **COMMENTAIRE AFFAIRE WATT**
+              - « Compte {{compte-display}} - Pas de risque de prescription - Plusieurs versements récents :<br>{{ecritures}}<br><br>Pas de réexécution car retour pour motif insolvable - Pas d'ANV suite aux versements  … »
+          - `raison-psa` — **PSA**
+            - [simple] `watt-versements` — **COMMENTAIRE AFFAIRE WATT**
+              - « Compte {{compte-display}} - Pas de risque de prescription - Plusieurs versements récents :<br>{{ecritures}}<br><br>Pas de réexécution car retour pour motif PSA et pas de nouvelle adresse trouvée - Pas … »
+      - `verse-non` — **NON**
+        - *RAISON* :
+          - `raison-frustratoires` — **FRAIS FRUSTRATOIRES**
+            - [simple] `watt-frustr-sans-versements` — **COMMENTAIRE AFFAIRE WATT**
+              - « Compte {{compte-display}} - Pas de risque de prescription - Pas de réexécution car frais frustratoires, en attente d'autres contraintes pour faire une réexécution groupée - Pas d'ANV car aucun justifi … »
+    - *toggles* :
+      - ☑ **DETTE NON EXIGIBLE** (`dette-non-exigible`)
+        - *TYPE* :
+          - `type-co` — **CO**
+            - *RAISON* :
+              - `raison-co-frustratoires` — **FRAIS FRUSTRATOIRES**
+                - [simple] `watt-dette-non-exigible` — **COMMENTAIRE AFFAIRE WATT**
+                  - « Compte {{compte-display}} - Pas de risque de prescription - Pas de réexécution car frais frustratoires, en attente d'autres contraintes pour faire une réexécution groupée - Pas d'ANV car dette non exi … »
+              - `raison-co-insolvable` — **INSOLVABLE**
+                - [simple] `watt-dette-non-exigible` — **COMMENTAIRE AFFAIRE WATT**
+                  - « Compte {{compte-display}} - Pas de risque de prescription - Pas de réexécution car retour pour motif insolvable - Pas d'ANV car dette non exigible - Tentative de recouvrement à l'amiable {{phrase-reld … »
+              - `raison-co-psa` — **PSA**
+                - [simple] `watt-dette-non-exigible` — **COMMENTAIRE AFFAIRE WATT**
+                  - « Compte {{compte-display}} - Pas de risque de prescription - Pas de réexécution car retour pour motif PSA et pas de nouvelle adresse trouvée - Pas d'ANV car dette non exigible - Tentative de recouvreme … »
+          - `type-md-psa` — **MD PSA**
+            - [simple] `watt-dette-non-exigible` — **COMMENTAIRE AFFAIRE WATT**
+              - « Compte {{compte-display}} - Pas de risque de prescription - MD PSA et pas de nouvelle adresse trouvée - Pas d'ANV car dette non exigible - Tentative de recouvrement à l'amiable {{phrase-reldet}} »
+    - *topQuestions* : COMPTE EN LIGNE OU MAIL ? (`compte-en-ligne`)
+
+### DÉLAI (`delai`)
+
+- *SOUS-CATÉGORIE* :
+  - `sous-cat-refus-pas-pj` — **REFUS - PAS DE PJ**
+    - [simple] `delai-objet` — **OBJET** *[si dca=oui|non, plus50k=oui|non]*
+      - « demande d'échéancier sur {{mois}} mois »
+    - [simple] `delai-courrier-gt36` — **TEXTE DU COURRIER** *[si dca=oui, plus50k=oui|non, mois-gt-36=oui]*
+      - « Vous sollicitez un délai de paiement sur {{mois}} mois pour le règlement de vos cotisations sociales auprès de notre organisme.<br><br>Nous ne pouvons pas donner une suite favorable à votre demande, e … »
+    - [simple] `delai-courrier-le36-50k-oui` — **TEXTE DU COURRIER** *[si dca=oui, plus50k=oui, mois-gt-36=non]*
+      - « Vous sollicitez un délai de paiement sur {{mois}} mois pour le règlement de vos cotisations sociales auprès de notre organisme.<br><br>Compte tenu du montant de votre dette, l'étude de votre dossier n … »
+    - [simple] `delai-courrier-le36-50k-non` — **TEXTE DU COURRIER** *[si dca=oui, plus50k=non, mois-gt-36=non]*
+      - « Vous sollicitez un délai de paiement sur {{mois}} mois pour le règlement de vos cotisations sociales auprès de notre organisme.<br><br>Afin d'étudier votre dossier, nous vous remercions de nous transm … »
+    - [simple] `delai-watt-ac` — **AFFAIRE WATT** *[si dca=oui, plus50k=oui|non, statut=A/C]*
+      - « SUR PO REFUS 06 en raison de l'absence de justificatifs concernant la demande de délai avec une dette supérieure à 50 000€. Une demande de pièces complémentaires a été transmise via SCRIBE. »
+    - [simple] `delai-watt-pl` — **AFFAIRE WATT** *[si dca=oui, plus50k=oui|non, statut=PL]*
+      - « SUR PO REFUS 65 en raison de l'absence de justificatifs concernant la demande de délai avec une dette supérieure à 50 000€. Une demande de pièces complémentaires a été transmise via SCRIBE. »
+    - [simple] `delai-courrier-dca-non-le36-50k-oui` — **TEXTE DU COURRIER** *[si dca=non, plus50k=oui, mois-gt-36=non]*
+      - « Vous sollicitez un délai de paiement sur {{mois}} mois pour le règlement de vos cotisations sociales auprès de notre organisme.<br><br>Compte tenu du montant de votre dette, l'étude de votre dossier n … »
+    - [simple] `delai-courrier-dca-non-gt36-50k-oui` — **TEXTE DU COURRIER** *[si dca=non, plus50k=oui, mois-gt-36=oui]*
+      - « Vous sollicitez un délai de paiement sur {{mois}} mois pour le règlement de vos cotisations sociales auprès de notre organisme.<br><br>Nous ne pouvons pas donner une suite favorable à votre demande, e … »
+    - [simple] `delai-courrier-dca-non-le36-50k-non` — **TEXTE DU COURRIER** *[si dca=non, plus50k=non, mois-gt-36=non]*
+      - « Vous sollicitez un délai de paiement sur {{mois}} mois pour le règlement de vos cotisations sociales auprès de notre organisme.<br><br>Afin d'étudier votre dossier, nous vous remercions de nous transm … »
+    - [simple] `delai-courrier-dca-non-gt36-50k-non` — **TEXTE DU COURRIER** *[si dca=non, plus50k=non, mois-gt-36=oui]*
+      - « Vous sollicitez un délai de paiement sur {{mois}} mois pour le règlement de vos cotisations sociales auprès de notre organisme.<br><br>Nous ne pouvons pas donner une suite favorable à votre demande, e … »
+    - [fragment] `watt-dca-non-bloc1-ac` — **** *[si dca=non, plus50k=oui|non, statut=A/C]*
+      - fragment : « SUR PO REFUS 06 en raison de l'absence de justificatifs concernant la demande de délai avec une dette supérieure à 50 000€. »
+    - [fragment] `watt-dca-non-bloc1-pl` — **** *[si dca=non, plus50k=oui|non, statut=PL]*
+      - fragment : « SUR PO REFUS 65 en raison de l'absence de justificatifs concernant la demande de délai avec une dette supérieure à 50 000€. »
+    - [fragment] `watt-dca-non-bloc2-ae-ac` — **** *[si dca=non, ae-ti=ae, statut=A/C]*
+      - fragment : « SUR PO REFUS 12 car DCA manquantes. »
+    - [fragment] `watt-dca-non-bloc2-ae-pl` — **** *[si dca=non, ae-ti=ae, statut=PL]*
+      - fragment : « SUR PO REFUS 67 car DCA manquantes. »
+    - [fragment] `watt-dca-non-bloc2-ti-ac` — **** *[si dca=non, ae-ti=ti, statut=A/C]*
+      - fragment : « SUR PO REFUS 03 car déclarations de revenus manquantes. »
+    - [fragment] `watt-dca-non-bloc2-ti-pl` — **** *[si dca=non, ae-ti=ti, statut=PL]*
+      - fragment : « SUR PO REFUS 67 car déclarations de revenus manquantes. »
+    - [fragment] `watt-dca-non-conclusion-ae` — **** *[si dca=non, ae-ti=ae]*
+      - fragment : « Une demande de pièces complémentaires a été transmise via SCRIBE avec un rappel concernant ses DCA manquantes. »
+    - [fragment] `watt-dca-non-conclusion-ti` — **** *[si dca=non, ae-ti=ti]*
+      - fragment : « Une demande de pièces complémentaires a été transmise via SCRIBE avec un rappel concernant ses déclarations de revenus. »
+    - [composite] `delai-watt-dca-non` — **AFFAIRE WATT** *[si dca=non, plus50k=oui|non, ae-ti=ae|ti]*
+      - combine: watt-dca-non-bloc1-ac + watt-dca-non-bloc1-pl + watt-dca-non-bloc2-ae-ac + watt-dca-non-bloc2-ae-pl + watt-dca-non-bloc2-ti-ac + watt-dca-non-bloc2-ti-pl
+      - appendFragments: watt-dca-non-conclusion-ae, watt-dca-non-conclusion-ti
+  - `sous-cat-refus-dca-manquantes` — **REFUS DCA MANQUANTES**
+
+### RÉEXÉCUTION (`reexecution`)
+
+- [simple] `reex-courrier-defaut-ficoba-oui` — **TEXTE DU COURRIER** *[si ficoba-reex=oui, instructions-cj=defaut]*
+  - « <img src="{{image-cj}}" alt="capture" style="max-width: 100%; display: block; margin-bottom: 0.5em;"/><p><strong>Date limite avant prescription :</strong> <strong>{{date-prescription-full}}</strong></ … »
+- [simple] `reex-postit-defaut-ficoba-oui` — **POST-IT PORTAIL TI OU ESDC & COMMENTAIRE AFFAIRE WATT** *[si ficoba-reex=oui, instructions-cj=defaut]*
+  - « Réexécution faite ce jour au CJ {{cj-numero}} »
+- [simple] `reex-courrier-defaut-ficoba-non` — **TEXTE DU COURRIER** *[si ficoba-reex=non, instructions-cj=defaut]*
+  - « <img src="{{image-cj}}" alt="capture" style="max-width: 100%; display: block; margin-bottom: 0.5em;"/><p><strong>Date limite avant prescription :</strong> <strong>{{date-prescription-full}}</strong></ … »
+- [simple] `reex-postit-defaut-ficoba-non` — **POST-IT PORTAIL TI OU ESDC & COMMENTAIRE AFFAIRE WATT** *[si ficoba-reex=non, instructions-cj=defaut]*
+  - « Réexécution faite ce jour au CJ {{cj-numero}} »
+- [simple] `reex-courrier-satt-ficoba-oui` — **TEXTE DU COURRIER** *[si ficoba-reex=oui, instructions-cj=s att]*
+  - « <img src="{{image-cj}}" alt="capture" style="max-width: 100%; display: block; margin-bottom: 0.5em;"/><p><strong>Date limite avant prescription :</strong> <strong>{{date-prescription-full}}</strong></ … »
+- [simple] `reex-postit-satt-ficoba-oui` — **POST-IT PORTAIL TI OU ESDC & COMMENTAIRE AFFAIRE WATT** *[si ficoba-reex=oui, instructions-cj=s att]*
+  - « Réexécution faite ce jour au CJ {{cj-numero}} »
+- [simple] `reex-courrier-satt-ficoba-non` — **TEXTE DU COURRIER** *[si ficoba-reex=non, instructions-cj=s att]*
+  - « <img src="{{image-cj}}" alt="capture" style="max-width: 100%; display: block; margin-bottom: 0.5em;"/><p><strong>Date limite avant prescription :</strong> <strong>{{date-prescription-full}}</strong></ … »
+- [simple] `reex-postit-satt-ficoba-non` — **POST-IT PORTAIL TI OU ESDC & COMMENTAIRE AFFAIRE WATT** *[si ficoba-reex=non, instructions-cj=s att]*
+  - « Réexécution faite ce jour au CJ {{cj-numero}} »
+- [simple] `reex-courrier-com-ficoba-oui` — **TEXTE DU COURRIER** *[si ficoba-reex=oui, instructions-cj=com]*
+  - « <img src="{{image-cj}}" alt="capture" style="max-width: 100%; display: block; margin-bottom: 0.5em;"/><p><strong>Date limite avant prescription :</strong> <strong>{{date-prescription-full}}</strong></ … »
+- [simple] `reex-postit-com-ficoba-oui` — **POST-IT PORTAIL TI OU ESDC & COMMENTAIRE AFFAIRE WATT** *[si ficoba-reex=oui, instructions-cj=com]*
+  - « Réexécution faite ce jour au CJ {{cj-numero}} »
+- [simple] `reex-courrier-com-ficoba-non` — **TEXTE DU COURRIER** *[si ficoba-reex=non, instructions-cj=com]*
+  - « <img src="{{image-cj}}" alt="capture" style="max-width: 100%; display: block; margin-bottom: 0.5em;"/><p><strong>Date limite avant prescription :</strong> <strong>{{date-prescription-full}}</strong></ … »
+- [simple] `reex-postit-com-ficoba-non` — **POST-IT PORTAIL TI OU ESDC & COMMENTAIRE AFFAIRE WATT** *[si ficoba-reex=non, instructions-cj=com]*
+  - « Réexécution faite ce jour au CJ {{cj-numero}} »
+
+## Stats
+
+- Catégories : 3
+- Choix totaux (tous niveaux) : 31
+- Inputs : 8
+- Toggles : 2
+- TopQuestions : 2
+- Résultats (blocs texte) : 89
