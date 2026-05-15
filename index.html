@@ -646,15 +646,6 @@
           if (vars.__category !== "reexecution") {
             result = result.replace(/(\b\d{2}\/\d{2}\/)\d{2}(\d{2}\b)/g, "$1$2");
           }
-          // Si la topQuestion "compte-en-ligne" est répondue NON, on remplace
-          // ABSOLUMENT TOUS les "-> RELDET + formulaire de demande délai envoyé par SCRIBE"
-          // par la version "v2" (pas de compte en ligne ni mail).
-          if (topAnswers["compte-en-ligne"] === "non") {
-            result = result.replace(
-              /-> RELDET \+ formulaire de demande délai envoyé par SCRIBE/g,
-              "-> RELDET fait en v2 car pas de compte en ligne ni de mail pour envoyer par SCRIBE"
-            );
-          }
           // Si "ficoba" est répondu NON (motif 12), on retire le "+ FICOBA" du bloc principal.
           // (Le bloc fragment "(Pas de FICOBA car site KO)" est ajouté à la fin du WATT
           // séparément via le composite.)
@@ -738,6 +729,13 @@
           // (incluant le cas où MOIS est vide → on affiche le texte par défaut ≤ 36).
           const _moisNum = parseFloat(nodeInputs.mois);
           vars["mois-gt-36"] = !Number.isNaN(_moisNum) && _moisNum > 36 ? "oui" : "non";
+
+          // Phrase finale "-> RELDET..." centralisée : version V2 si la topQuestion
+          // "COMPTE EN LIGNE OU MAIL ?" est répondue NON, version standard sinon.
+          // Source unique : si tu changes la phrase, tu la changes ici, point.
+          vars["phrase-reldet"] = topAnswers["compte-en-ligne"] === "non"
+            ? "-> RELDET fait en v2 car pas de compte en ligne ni de mail pour envoyer par SCRIBE"
+            : "-> RELDET + formulaire de demande délai envoyé par SCRIBE";
 
           // RÉEXÉCUTION : "date-prescription-full" expand JJ/MM/AA en JJ/MM/AAAA
           // (l'inverse du raccourcissement global). Si l'user tape déjà 4 chiffres,

@@ -289,7 +289,7 @@ function makeFrustrSansVersementsLeaf() {
         label: "COMMENTAIRE AFFAIRE WATT",
         type: "simple",
         texte:
-          "Compte {{compte-display}} - Pas de risque de prescription - Pas de réexécution car frais frustratoires, en attente d'autres contraintes pour faire une réexécution groupée - Pas d'ANV car aucun justificatif - Tentative de recouvrement à l'amiable -> RELDET + formulaire de demande délai envoyé par SCRIBE",
+          "Compte {{compte-display}} - Pas de risque de prescription - Pas de réexécution car frais frustratoires, en attente d'autres contraintes pour faire une réexécution groupée - Pas d'ANV car aucun justificatif - Tentative de recouvrement à l'amiable {{phrase-reldet}}",
       },
     ],
   };
@@ -759,7 +759,7 @@ const raisonChoixAvecVersements = [
     label: "FRAIS FRUSTRATOIRES",
     description: "",
     suite: makeVersementsLeaf(
-      "Pas de réexécution car frais frustratoires, en attente d'autres contraintes pour faire une réexécution groupée - Pas d'ANV car aucun justificatif et versements récents - Tentative de recouvrement à l'amiable -> RELDET + formulaire de demande délai envoyé par SCRIBE"
+      "Pas de réexécution car frais frustratoires, en attente d'autres contraintes pour faire une réexécution groupée - Pas d'ANV car aucun justificatif et versements récents - Tentative de recouvrement à l'amiable {{phrase-reldet}}"
     ),
   },
   {
@@ -767,7 +767,7 @@ const raisonChoixAvecVersements = [
     label: "INSOLVABLE",
     description: "",
     suite: makeVersementsLeaf(
-      "Pas de réexécution car retour pour motif insolvable - Pas d'ANV suite aux versements récents - Tentative de recouvrement à l'amiable -> RELDET + formulaire de demande délai envoyé par SCRIBE"
+      "Pas de réexécution car retour pour motif insolvable - Pas d'ANV suite aux versements récents - Tentative de recouvrement à l'amiable {{phrase-reldet}}"
     ),
   },
   {
@@ -775,7 +775,7 @@ const raisonChoixAvecVersements = [
     label: "PSA",
     description: "",
     suite: makeVersementsLeaf(
-      "Pas de réexécution car retour pour motif PSA et pas de nouvelle adresse trouvée - Pas d'ANV suite aux versements récents - Tentative de recouvrement à l'amiable -> RELDET + formulaire de demande délai envoyé par SCRIBE"
+      "Pas de réexécution car retour pour motif PSA et pas de nouvelle adresse trouvée - Pas d'ANV suite aux versements récents - Tentative de recouvrement à l'amiable {{phrase-reldet}}"
     ),
   },
 ];
@@ -846,7 +846,7 @@ function makeDetteNonExigibleLeaf(phraseMiddle) {
         texte:
           "Compte {{compte-display}} - Pas de risque de prescription - " +
           phraseMiddle +
-          " - Pas d'ANV car dette non exigible - Tentative de recouvrement à l'amiable -> RELDET + formulaire de demande délai envoyé par SCRIBE",
+          " - Pas d'ANV car dette non exigible - Tentative de recouvrement à l'amiable {{phrase-reldet}}",
       },
     ],
   };
@@ -905,9 +905,9 @@ amiableReldetToggle.whenOn.toggles = [detteNonExigibleToggle];
 
 // Question optionnelle "COMPTE EN LIGNE OU MAIL ?" affichée dans la rangée des toggles,
 // entre AMIABLE RELDET et DETTE NON EXIGIBLE. Par défaut non répondue (= comportement
-// "OUI implicite"). Si l'utilisateur répond NON, le moteur remplace globalement
-// "-> RELDET + formulaire de demande délai envoyé par SCRIBE" par
-// "-> RELDET fait en v2 car pas de compte en ligne ni de mail pour envoyer par SCRIBE".
+// "OUI implicite"). Si l'utilisateur répond NON, la variable de template
+// {{phrase-reldet}} bascule sur la version V2 ("RELDET fait en v2 car pas de compte
+// en ligne ni de mail pour envoyer par SCRIBE"). Logique dans buildTemplateVars().
 amiableReldetToggle.whenOn.topQuestions = [
   {
     id: "compte-en-ligne",
@@ -1025,7 +1025,7 @@ const delaiRefusPasPjLeafConfig = {
       type: "simple",
       if: { dca: ["oui"], plus50k: ["oui", "non"], statut: ["A/C"] },
       texte:
-        "SUR PO REFUS 06 en raison de l'absence de justificatifs concernant la demande de délai avec une dette supérieur à 50 000€. Une demande de pièces complémentaires a été transmise via SCRIBE.",
+        "SUR PO REFUS 06 en raison de l'absence de justificatifs concernant la demande de délai avec une dette supérieure à 50 000€. Une demande de pièces complémentaires a été transmise via SCRIBE.",
     },
     {
       id: "delai-watt-pl",
@@ -1033,7 +1033,7 @@ const delaiRefusPasPjLeafConfig = {
       type: "simple",
       if: { dca: ["oui"], plus50k: ["oui", "non"], statut: ["PL"] },
       texte:
-        "SUR PO REFUS 65 en raison de l'absence de justificatifs concernant la demande de délai avec une dette supérieur à 50 000€. Une demande de pièces complémentaires a été transmise via SCRIBE.",
+        "SUR PO REFUS 65 en raison de l'absence de justificatifs concernant la demande de délai avec une dette supérieure à 50 000€. Une demande de pièces complémentaires a été transmise via SCRIBE.",
     },
 
     // ===== TEXTE DU COURRIER : DCA = NON + MOIS ≤ 36 + 50K = OUI =====
@@ -1124,13 +1124,13 @@ const delaiRefusPasPjLeafConfig = {
       id: "watt-dca-non-bloc1-ac",
       type: "fragment",
       if: { dca: ["non"], plus50k: ["oui", "non"], statut: ["A/C"] },
-      texte: "SUR PO REFUS 06 en raison de l'absence de justificatifs concernant la demande de délai avec une dette supérieur à 50 000€.",
+      texte: "SUR PO REFUS 06 en raison de l'absence de justificatifs concernant la demande de délai avec une dette supérieure à 50 000€.",
     },
     {
       id: "watt-dca-non-bloc1-pl",
       type: "fragment",
       if: { dca: ["non"], plus50k: ["oui", "non"], statut: ["PL"] },
-      texte: "SUR PO REFUS 65 en raison de l'absence de justificatifs concernant la demande de délai avec une dette supérieur à 50 000€.",
+      texte: "SUR PO REFUS 65 en raison de l'absence de justificatifs concernant la demande de délai avec une dette supérieure à 50 000€.",
     },
     {
       id: "watt-dca-non-bloc2-ae-ac",

@@ -219,6 +219,7 @@ Calculées dans `buildTemplateVars()` à chaque rendu :
 - `{{date-prescription-full}}` : RÉEXÉCUTION uniquement. La date saisie par l'utilisateur, **expand** en `JJ/MM/AAAA` (ajoute `20` devant 2 chiffres). Utiliser cette variable et **pas** `{{date-prescription}}`.
 - `{{mois-gt-36}}` : DÉLAI. Vaut `"oui"` si l'input MOIS > 36, sinon `"non"` (y compris quand vide). Permet de switcher les textes selon la durée demandée.
 - `{{adresse}}` : RÉEXÉCUTION. La valeur est **forcée en MAJUSCULES** dans le résultat (peu importe ce que l'utilisateur tape).
+- `{{phrase-reldet}}` : ANV / AMIABLE RELDET. Phrase finale `-> RELDET ... par SCRIBE`. Vaut la version standard (`-> RELDET + formulaire de demande délai envoyé par SCRIBE`) par défaut ; vaut la version V2 (`-> RELDET fait en v2 car pas de compte en ligne ni de mail pour envoyer par SCRIBE`) si `topAnswers["compte-en-ligne"] === "non"`. **Source unique** : si tu veux changer la phrase, c'est dans `buildTemplateVars()` (et nulle part ailleurs).
 - `{{<slug>-id}}`, `{{<slug>-label}}`, `{{<slug>-code}}`, `{{<slug>-text}}`, `{{<slug>-abbrev}}` : pour chaque niveau de cascade qui a un `choicesTitle`, le slug est le titre slugifié. Ex : `{{motif-id}}`, `{{sous-motif-abbrev}}`.
 - `{{dretaf}}`, `{{suspen}}`, `{{dca}}`, `{{plus50k}}`, `{{ae-ti}}`, `{{instructions-cj}}` : réponses aux leafQuestions (par leur `id`).
 - `{{compte-en-ligne}}`, `{{ficoba}}`, `{{ficoba-reex}}` : réponses aux topQuestions (`"oui"` / `"non"` / vide).
@@ -228,8 +229,9 @@ Calculées dans `buildTemplateVars()` à chaque rendu :
 
 Appliqué à TOUT le résultat HTML après substitution :
 1. **Date 4 chiffres → 2 chiffres** : `JJ/MM/AAAA` → `JJ/MM/AA`. Marche pour les inputs DATE et pour les écritures collées. **Skip dans la catégorie RÉEXÉCUTION** (où on veut au contraire 4 chiffres pour la date de prescription, via `{{date-prescription-full}}`).
-2. **Si `topAnswers["compte-en-ligne"] === "non"`** : remplace `… -> RELDET + formulaire de demande délai envoyé par SCRIBE` par `… -> RELDET fait en v2 car pas de compte en ligne ni de mail pour envoyer par SCRIBE`.
-3. **Si `topAnswers["ficoba"] === "non"`** : remplace `ET RECH EOPPS + FICOBA RECENTE` par `ET RECH EOPPS RECENTE` (motif 12, A/C uniquement).
+2. **Si `topAnswers["ficoba"] === "non"`** : remplace `ET RECH EOPPS + FICOBA RECENTE` par `ET RECH EOPPS RECENTE` (motif 12, A/C uniquement).
+
+*Note : la bascule V2 du RELDET (compte-en-ligne=non) ne passe plus par un post-traitement regex mais par la variable de template `{{phrase-reldet}}` calculée dans `buildTemplateVars()`.*
 
 ## Comportements spéciaux à connaître
 
