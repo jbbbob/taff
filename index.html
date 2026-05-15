@@ -646,15 +646,6 @@
           if (vars.__category !== "reexecution") {
             result = result.replace(/(\b\d{2}\/\d{2}\/)\d{2}(\d{2}\b)/g, "$1$2");
           }
-          // Si "ficoba" est répondu NON (motif 12), on retire le "+ FICOBA" du bloc principal.
-          // (Le bloc fragment "(Pas de FICOBA car site KO)" est ajouté à la fin du WATT
-          // séparément via le composite.)
-          if (topAnswers["ficoba"] === "non") {
-            result = result.replace(
-              /ET RECH EOPPS \+ FICOBA RECENTE/g,
-              "ET RECH EOPPS RECENTE"
-            );
-          }
           return result;
         }
 
@@ -736,6 +727,12 @@
           vars["phrase-reldet"] = topAnswers["compte-en-ligne"] === "non"
             ? "-> RELDET fait en v2 car pas de compte en ligne ni de mail pour envoyer par SCRIBE"
             : "-> RELDET + formulaire de demande délai envoyé par SCRIBE";
+
+          // Phrase "ET RECH EOPPS [+ FICOBA] RECENTE" centralisée : sans le "+ FICOBA"
+          // si la topQuestion FICOBA est répondue NON (motif 12 A/C). Source unique.
+          vars["phrase-eopps"] = topAnswers["ficoba"] === "non"
+            ? "ET RECH EOPPS RECENTE"
+            : "ET RECH EOPPS + FICOBA RECENTE";
 
           // RÉEXÉCUTION : "date-prescription-full" expand JJ/MM/AA en JJ/MM/AAAA
           // (l'inverse du raccourcissement global). Si l'user tape déjà 4 chiffres,
