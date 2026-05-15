@@ -1,0 +1,1939 @@
+﻿<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ANV</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+      :root {
+        --bg-1: #121212;
+        --bg-2: #121212;
+        --ink: #ece7df;
+        --surface: rgba(28, 28, 28, 0.88);
+        --surface-strong: #202020;
+        --border: rgba(255, 255, 255, 0.08);
+        --muted: #bdb4a8;
+        --muted-strong: #f5efe6;
+        --accent: #8b5cf6;
+        --accent-strong: #c4b5fd;
+        --button-bg: #ffffff;
+        --button-text: #181818;
+        --button-hover: #f3f4f6;
+      }
+
+      body {
+        font-family: "Aptos", "Aptos (Corps)", Calibri, Arial, sans-serif;
+        font-size: 13pt;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        background: var(--bg-1);
+        color: var(--ink);
+        min-height: 100vh;
+      }
+
+      body,
+      body * {
+        font-family: "Aptos", "Aptos (Corps)", Calibri, Arial, sans-serif !important;
+        font-size: 13pt !important;
+      }
+
+      button,
+      input,
+      textarea,
+      select {
+        font: inherit;
+        font-family: "Aptos", "Aptos (Corps)", Calibri, Arial, sans-serif !important;
+        font-weight: 700 !important;
+        text-transform: inherit;
+        letter-spacing: inherit;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+        overflow-anchor: none;
+      }
+
+      html {
+        overflow-anchor: none;
+      }
+
+      .copy-success {
+        background-color: #22c55e !important;
+        color: white !important;
+        box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.35) !important;
+      }
+
+      .surface-shell {
+        background: var(--surface);
+        border-color: var(--border);
+      }
+
+      .surface-card {
+        background: var(--surface-strong);
+        border-color: var(--border);
+      }
+
+      .text-muted {
+        color: var(--muted);
+      }
+
+      .text-strong {
+        color: var(--muted-strong);
+      }
+
+      .brand-button {
+        background: var(--button-bg);
+        color: var(--button-text);
+      }
+
+      .brand-button:hover {
+        background: var(--button-hover);
+      }
+
+      .floating-reset {
+        position: fixed;
+        right: 1rem;
+        bottom: 1rem;
+        z-index: 50;
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+      }
+
+      @media (min-width: 768px) {
+        .floating-reset {
+          right: 1.5rem;
+          bottom: 1.5rem;
+        }
+      }
+
+      .page-shell {
+        width: 100%;
+        position: relative;
+      }
+
+      .choice-grid-root {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+
+      .context-dock {
+        width: 100%;
+      }
+
+      /* Sidebar gauche COMPTE / STATUT : labels plus courts pour économiser
+         de la place dans la colonne étroite. */
+      .context-dock .card-row-label {
+        flex: 0 0 100px;
+        width: 100px;
+      }
+
+      .context-option {
+        border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.02);
+        color: var(--muted-strong);
+      }
+
+      .context-option:hover {
+        border-color: var(--accent);
+        background: rgba(139, 92, 246, 0.08);
+      }
+
+      .context-option.is-selected,
+      .context-option.is-selected:hover {
+        border-color: var(--accent);
+        background: var(--accent);
+        color: #ffffff;
+        box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.35);
+      }
+
+      .context-option.is-selected .motif-code {
+        background: rgba(0, 0, 0, 0.32);
+        color: #ffffff;
+      }
+
+      /* ===== Layout V1 : card-row ===== */
+      /* Chaque étape du parcours = une ligne-carte avec label fixe à gauche
+         et options à droite, alignées horizontalement. */
+      .card-row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        width: 100%;
+        background: linear-gradient(180deg, #232220 0%, #1c1b19 100%);
+        border: 1px solid rgba(139, 92, 246, 0.18);
+        border-left: 4px solid var(--accent);
+        border-radius: 0.75rem;
+        padding: 0.875rem 1.125rem 0.875rem 1rem;
+        min-height: 4.5rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .card-row-label {
+        flex: 0 0 220px;
+        width: 220px;
+        font-weight: 700;
+        color: var(--accent-strong);
+        line-height: 1.1;
+        white-space: nowrap;
+      }
+
+      .card-row-content {
+        flex: 1 1 auto;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.625rem;
+        min-width: 0;
+      }
+
+      /* Bouton compact horizontal (utilisé pour COMPTE, STATUT, MOTIF, SOUS-MOTIF,
+         catégories, OUI/NON…). Hauteur uniforme pour rythme visuel. */
+      .pill-btn {
+        height: 2.875rem;
+        padding: 0 1.25rem;
+        border-radius: 0.625rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.625rem;
+        white-space: nowrap;
+        font-weight: 700;
+        cursor: pointer;
+        line-height: 1;
+      }
+
+      .pill-btn.empty-choice {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+
+      .pill-btn .empty-tag {
+        font-size: 10pt !important;
+        padding: 0.1rem 0.5rem;
+        border-radius: 0.25rem;
+        color: var(--accent-strong);
+        background: rgba(139, 92, 246, 0.12);
+        border: 1px solid rgba(139, 92, 246, 0.4);
+      }
+
+      .card-input {
+        height: 2.875rem;
+        padding: 0 0.875rem;
+        border-radius: 0.625rem;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(139, 92, 246, 0.4);
+        color: var(--muted-strong);
+        outline: none;
+        min-width: 13rem;
+      }
+
+      .card-input:focus {
+        border-color: var(--accent);
+        background: rgba(139, 92, 246, 0.08);
+        box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.25);
+      }
+
+      .card-textarea {
+        min-height: 7rem;
+        padding: 0.625rem 0.875rem;
+        border-radius: 0.625rem;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(139, 92, 246, 0.4);
+        color: var(--muted-strong);
+        outline: none;
+        width: 100%;
+        flex: 1 1 100%;
+        resize: vertical;
+        line-height: 1.4;
+      }
+
+      .card-textarea:focus {
+        border-color: var(--accent);
+        background: rgba(139, 92, 246, 0.08);
+        box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.25);
+      }
+
+      /* Zone de collage d'image (Ctrl+V) */
+      .image-paste-zone {
+        width: 100%;
+        min-height: 6rem;
+        padding: 0.625rem;
+        border-radius: 0.625rem;
+        border: 1px dashed rgba(139, 92, 246, 0.5);
+        background: rgba(255, 255, 255, 0.02);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        outline: none;
+        flex: 1 1 100%;
+      }
+      .image-paste-zone:focus {
+        border-color: var(--accent);
+        border-style: solid;
+        background: rgba(139, 92, 246, 0.06);
+      }
+      .image-paste-zone .image-placeholder {
+        color: var(--muted);
+        font-style: italic;
+      }
+      .image-paste-zone img {
+        max-width: 100%;
+        max-height: 28rem;
+        display: block;
+        border-radius: 0.375rem;
+      }
+
+      .back-arrow-btn {
+        height: 2.875rem;
+        width: 2.875rem;
+        border-radius: 0.625rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--muted-strong);
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--border);
+        cursor: pointer;
+      }
+
+      .back-arrow-btn:hover {
+        border-color: rgba(139, 92, 246, 0.5);
+      }
+
+      /* MOTIF en mode horizontal : code en pastille + texte sur même ligne. */
+      .motif-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.625rem;
+        min-height: unset;
+        grid-template-rows: unset;
+        text-align: left;
+        font-weight: 700;
+        width: auto;
+      }
+
+      .motif-code {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: auto;
+        height: 1.875rem;
+        padding: 0 0.55rem;
+        border-radius: 0.3125rem;
+        background: rgba(139, 92, 246, 0.16);
+        color: var(--accent-strong);
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        flex: 0 0 auto;
+      }
+
+      .motif-text {
+        display: inline-flex;
+        align-items: center;
+        width: auto;
+        min-height: unset;
+        text-wrap: balance;
+        line-height: 1;
+        font-weight: 700;
+        flex: 0 1 auto;
+      }
+
+      .leaf-input-wrap {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-left: 0.5rem;
+      }
+
+      .leaf-input-label {
+        color: var(--accent-strong);
+        font-weight: 700;
+      }
+
+      /* ===== Bloc résultat : titre détaché du corps ===== */
+      .result-card {
+        background: var(--surface-strong);
+        border: 1px solid rgba(139, 92, 246, 0.45);
+        border-radius: 0.75rem;
+        overflow: hidden;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      }
+
+      .result-header {
+        padding: 0.625rem 1rem;
+        background: rgba(139, 92, 246, 0.22);
+        color: var(--accent-strong);
+        font-weight: 700;
+        border-bottom: 1px solid rgba(139, 92, 246, 0.45);
+        letter-spacing: 0.1em;
+      }
+
+      .result-body {
+        padding: 0.875rem 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .result-sub {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.875rem;
+      }
+
+      .result-sub + .result-sub {
+        padding-top: 0.75rem;
+        border-top: 1px dashed rgba(139, 92, 246, 0.25);
+      }
+
+      .result-content {
+        flex: 1 1 auto;
+        min-width: 0;
+        color: var(--muted-strong);
+        line-height: 1.45;
+      }
+
+      /* Les textes affichés dans le bloc résultat gardent leur casse d'origine
+         (= ce qui sera copié dans Word). Pas de force-uppercase, pas de
+         letter-spacing élargi : c'est du texte de courrier, pas de l'UI. */
+      .result-header,
+      .result-content,
+      .result-content * {
+        text-transform: none !important;
+        letter-spacing: normal !important;
+      }
+
+      /* Restaurer les styles natifs des balises de mise en forme dans la preview
+         (Tailwind preflight les remet à zéro). Comme ça la preview ressemble
+         visuellement au rendu Word. */
+      .result-content p {
+        margin: 0 0 0.6em 0;
+      }
+      .result-content p:last-child {
+        margin-bottom: 0;
+      }
+      .result-content ul {
+        list-style: disc;
+        padding-left: 1.5em;
+        margin: 0 0 0.6em 0;
+      }
+      .result-content ul ul {
+        list-style: circle;
+        margin-bottom: 0;
+      }
+      .result-content li {
+        margin: 0.2em 0;
+      }
+      .result-content strong, .result-content b {
+        font-weight: 700;
+      }
+      .result-content em, .result-content i {
+        font-style: italic;
+      }
+      .result-content u {
+        text-decoration: underline;
+      }
+      .result-content img {
+        max-width: 100%;
+        height: auto;
+      }
+
+      @media (max-width: 1023px) {
+        .choice-grid-root {
+          justify-content: flex-start;
+        }
+
+        .card-row-label {
+          flex: 0 0 90px;
+          width: 90px;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .card-row {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .card-row-label {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="font-sans antialiased">
+    <main class="w-full px-4 md:px-6 py-4 md:py-6 min-h-screen flex justify-center">
+      <div class="w-full max-w-[1600px] flex flex-col md:flex-row gap-4">
+
+        <aside id="contextPanel" class="context-dock md:w-[400px] md:shrink-0 w-full flex flex-col gap-2"></aside>
+
+        <div class="flex-1 min-w-0 flex flex-col gap-2">
+          <section id="breadcrumbsSection" class="hidden w-full mb-2">
+            <div class="surface-shell border rounded-lg px-3 py-2 text-center">
+              <nav id="breadcrumbs" class="text-sm text-muted flex flex-wrap justify-center gap-2"></nav>
+            </div>
+          </section>
+
+          <section id="categoryTabs" class="w-full"></section>
+          <section id="questionZone" class="w-full hidden"></section>
+
+          <section id="entryLayout" class="w-full">
+            <section id="mainPanel" class="w-full flex flex-col gap-2">
+              <section id="inlineTitleContainer" class="w-full"></section>
+              <section id="togglesContainer" class="w-full flex flex-col gap-2"></section>
+              <section id="cascadeFlow" class="w-full flex flex-col gap-2"></section>
+              <section id="leafQuestionsContainer" class="w-full flex flex-col gap-2"></section>
+              <!-- Conservés pour compat (vides désormais, gérés via cascadeFlow) -->
+              <section id="inputsContainer" class="hidden"></section>
+              <section id="choicesHeader" class="hidden"></section>
+              <section id="choicesContainer" class="hidden"></section>
+            </section>
+          </section>
+
+          <section id="resultsContainer" class="w-full flex flex-col gap-2"></section>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- Bouton discret pour copier le chemin actuel (utile pour échanger avec Claude) -->
+    <button id="copyPathBtn" type="button" title="Copier le chemin actuel"
+      style="position: fixed; bottom: 1rem; right: 1rem; z-index: 50; padding: 0.4rem 0.7rem;
+             border-radius: 0.5rem; background: rgba(255,255,255,0.04);
+             border: 1px solid rgba(139, 92, 246, 0.4); color: var(--accent-strong);
+             font-weight: 700; cursor: pointer; opacity: 0.55;"
+      onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.55">
+      📋 chemin
+    </button>
+
+    <script src="./data.js"></script>
+    <script>
+      (function () {
+        if (!window.treeData) {
+          alert("Erreur: treeData est introuvable. Verifiez le fichier data.js");
+          return;
+        }
+
+        const questionZone = document.getElementById("questionZone");
+        const inlineTitleContainer = document.getElementById("inlineTitleContainer");
+        const choicesContainer = document.getElementById("choicesContainer");
+        const choicesHeader = document.getElementById("choicesHeader");
+        const inputsContainer = document.getElementById("inputsContainer");
+        const togglesContainer = document.getElementById("togglesContainer");
+        const cascadeFlow = document.getElementById("cascadeFlow");
+        const contextPanel = document.getElementById("contextPanel");
+        const entryLayout = document.getElementById("entryLayout");
+        const resultsContainer = document.getElementById("resultsContainer");
+        const breadcrumbsSection = document.getElementById("breadcrumbsSection");
+        const breadcrumbs = document.getElementById("breadcrumbs");
+        const categoryTabs = document.getElementById("categoryTabs");
+        const leafQuestionsContainer = document.getElementById("leafQuestionsContainer");
+        const globalContextOptions = window.globalContextOptions || [];
+
+        // trail = historique de navigation
+        // Chaque entree: { label: "Texte du choix", node: objet suite }
+        let trail = [{ label: "", node: window.treeData }];
+        let globalSelections = {};
+        let nodeInputs = {};
+        let nodeSelections = {};
+        let inlineRootNode = null;
+        let inlineChain = [];
+        let leafAnswers = {};
+        let leafInputs = {};
+        let lastScrollTargetId = null;
+        // Stack des toggles activés (ex: AMIABLE RELDET, puis DETTE NON EXIGIBLE
+        // imbriqué dedans). Chaque entrée = { savedRootNode, toggle }. Quand on
+        // active un toggle, on push (avec savedRootNode = inlineRootNode courant)
+        // puis on swap inlineRootNode vers toggle.whenOn. Quand on désactive, on
+        // pop tout depuis cet idx et on restore le savedRootNode.
+        let activeToggleStack = [];
+
+        // Réponses aux topQuestions (questions optionnelles affichées dans la rangée
+        // des toggles). Format : { questionId: "oui" | "non" | undefined }.
+        // Utilisé par substituteTemplate pour adapter globalement le résultat.
+        let topAnswers = {};
+
+        function saveNodeInputValue(inputId, value) {
+          nodeInputs[inputId] = value;
+        }
+
+        function saveNodeSelection(selectionKey, value) {
+          nodeSelections[selectionKey] = value;
+        }
+
+        function getCurrentNode() {
+          return trail[trail.length - 1].node;
+        }
+
+        function getDisplayNode() {
+          return inlineRootNode || getCurrentNode();
+        }
+
+        function escapeHtml(input) {
+          return String(input)
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+        }
+
+        function isChoiceEmpty(option) {
+          if (!option || !option.suite || typeof option.suite !== "object") return true;
+          const hasChoix = Array.isArray(option.suite.choix) && option.suite.choix.length > 0;
+          const hasResultats = Array.isArray(option.suite.resultats) && option.suite.resultats.length > 0;
+          return !hasChoix && !hasResultats;
+        }
+
+        function showToast(message) {
+          const existing = document.getElementById("taff-toast");
+          if (existing) existing.remove();
+          const toast = document.createElement("div");
+          toast.id = "taff-toast";
+          toast.textContent = message;
+          toast.className = "fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-2xl shadow-lg surface-card border text-strong font-bold";
+          document.body.appendChild(toast);
+          setTimeout(() => toast.remove(), 1800);
+        }
+
+        function stripHtmlToText(html) {
+          // Conversion robuste HTML → texte avec préservation des sauts de ligne.
+          // (Important : Word/Outlook collent parfois en text/plain plutôt qu'en
+          // text/html selon la config — il faut donc que le text/plain soit propre.)
+          return String(html || "")
+            .replace(/<br\s*\/?>/gi, "\n")
+            .replace(/<\/p>\s*<p[^>]*>/gi, "\n\n")
+            .replace(/<li[^>]*>/gi, "\n- ")
+            .replace(/<\/li>/gi, "")
+            .replace(/<\/?ul[^>]*>/gi, "\n")
+            .replace(/<\/?ol[^>]*>/gi, "\n")
+            .replace(/<\/?[^>]+>/g, "")
+            .replace(/&nbsp;/gi, " ")
+            .replace(/&amp;/gi, "&")
+            .replace(/&lt;/gi, "<")
+            .replace(/&gt;/gi, ">")
+            .replace(/&quot;/gi, '"')
+            .replace(/&#039;/gi, "'");
+        }
+
+        function splitMotifLabel(label) {
+          if (!label) return { code: "", text: "" };
+          const parts = label.split(" - ");
+          if (parts.length < 2) return { code: "", text: label };
+          return { code: parts[0], text: parts.slice(1).join(" - ") };
+        }
+
+        function substituteTemplate(template, vars) {
+          if (typeof template !== "string") return "";
+          let result = template.replace(/\{\{([^}]+)\}\}/g, (match, key) => {
+            const val = vars[key.trim()];
+            if (val == null) return "";
+            // On convertit les sauts de ligne en <br> pour le rendu HTML
+            // (utile pour les inputs de type textarea, ex: ÉCRITURES).
+            return String(val).replaceAll("\n", "<br>");
+          });
+          // Post-traitement : convertit toute date au format JJ/MM/AAAA en JJ/MM/AA.
+          // Skip dans la catégorie RÉEXÉCUTION (où on veut au contraire 4 chiffres
+          // pour la date de prescription).
+          if (vars.__category !== "reexecution") {
+            result = result.replace(/(\b\d{2}\/\d{2}\/)\d{2}(\d{2}\b)/g, "$1$2");
+          }
+          // Si la topQuestion "compte-en-ligne" est répondue NON, on remplace
+          // ABSOLUMENT TOUS les "-> RELDET + formulaire de demande délai envoyé par SCRIBE"
+          // par la version "v2" (pas de compte en ligne ni mail).
+          if (topAnswers["compte-en-ligne"] === "non") {
+            result = result.replace(
+              /-> RELDET \+ formulaire de demande délai envoyé par SCRIBE/g,
+              "-> RELDET fait en v2 car pas de compte en ligne ni de mail pour envoyé par SCRIBE"
+            );
+          }
+          // Si "ficoba" est répondu NON (motif 12), on retire le "+ FICOBA" du bloc principal.
+          // (Le bloc fragment "(Pas de FICOBA car site KO)" est ajouté à la fin du WATT
+          // séparément via le composite.)
+          if (topAnswers["ficoba"] === "non") {
+            result = result.replace(
+              /ET RECH EOPPS \+ FICOBA RECENTE/g,
+              "ET RECH EOPPS RECENTE"
+            );
+          }
+          return result;
+        }
+
+        // Transforme un copié-collé brut "Ecritures du compte" en lignes propres :
+        //   "Ecritures du compte 31/03/2026    86  €    TELEPAIEMENT     COTISANT"
+        //   → "31/03/2026 86€ TELEPAIEMENT COTISANT"
+        function cleanEcritures(text) {
+          return String(text || "")
+            .split("\n")
+            .map((line) =>
+              line
+                .replace(/Ecritures du compte/gi, "")
+                .replace(/(\d)\s+€/g, "$1€")
+                .replace(/\s+/g, " ")
+                .trim()
+            )
+            .filter((line) => line.length > 0)
+            .join("\n");
+        }
+
+        function contextMatches(conditions, vars) {
+          if (!conditions || typeof conditions !== "object") return true;
+          return Object.entries(conditions).every(([key, allowed]) => {
+            const currentValue = vars[key];
+            if (Array.isArray(allowed)) return allowed.includes(currentValue);
+            // Conditions numériques : { ">=": 36, "<": 50, ... }
+            if (allowed && typeof allowed === "object") {
+              const num = parseFloat(currentValue);
+              if (Number.isNaN(num)) return false;
+              return Object.entries(allowed).every(([op, v]) => {
+                const target = parseFloat(v);
+                if (Number.isNaN(target)) return false;
+                switch (op) {
+                  case ">": return num > target;
+                  case "<": return num < target;
+                  case ">=": return num >= target;
+                  case "<=": return num <= target;
+                  case "==": case "===": return num === target;
+                  case "!=": case "!==": return num !== target;
+                  default: return false;
+                }
+              });
+            }
+            return currentValue === allowed;
+          });
+        }
+
+        function buildTemplateVars() {
+          const vars = {};
+          (globalContextOptions || []).forEach((opt) => {
+            vars[opt.id] = globalSelections[opt.id] || "";
+          });
+          Object.assign(vars, nodeInputs || {});
+          Object.assign(vars, leafAnswers || {});
+          Object.assign(vars, leafInputs || {});
+          Object.assign(vars, topAnswers || {});
+
+          // Préfixe métier : "ANV PARTIELLE" par défaut (ACTIF + non sélectionné),
+          // "ANV" uniquement si RADIÉ explicitement choisi.
+          vars["motif-prefix"] = globalSelections.compte === "RADIÉ" ? "ANV" : "ANV PARTIELLE";
+          // "Compte actif" par défaut (et si rien n'est coché), "Compte radié" si RADIÉ
+          vars["compte-display"] = globalSelections.compte === "RADIÉ" ? "radié" : "actif";
+          // Date du jour au format JJ/MM/AA, recalculée à chaque rendu.
+          // Utilisée pour les templates qui demandent "date du jour" (ex: motif 13 RELANCE).
+          const _now = new Date();
+          vars["today"] =
+            String(_now.getDate()).padStart(2, "0") + "/" +
+            String(_now.getMonth() + 1).padStart(2, "0") + "/" +
+            String(_now.getFullYear()).slice(-2);
+
+          // Variable dérivée pour DÉLAI : "oui" si l'input MOIS > 36, sinon "non"
+          // (incluant le cas où MOIS est vide → on affiche le texte par défaut ≤ 36).
+          const _moisNum = parseFloat(nodeInputs.mois);
+          vars["mois-gt-36"] = !Number.isNaN(_moisNum) && _moisNum > 36 ? "oui" : "non";
+
+          // RÉEXÉCUTION : "date-prescription-full" expand JJ/MM/AA en JJ/MM/AAAA
+          // (l'inverse du raccourcissement global). Si l'user tape déjà 4 chiffres,
+          // c'est un no-op.
+          const _dp = nodeInputs["date-prescription"];
+          vars["date-prescription-full"] = _dp
+            ? String(_dp).replace(
+                /(\b\d{2}\/\d{2}\/)(\d{2})\b(?!\d)/g,
+                (_m, prefix, yy) => prefix + "20" + yy
+              )
+            : "";
+
+          // RÉEXÉCUTION : adresse forcée en majuscules dans le résultat copié,
+          // peu importe la casse tapée par l'utilisateur.
+          if (vars.adresse) vars.adresse = String(vars.adresse).toUpperCase();
+
+          // Catégorie active (pour skip le raccourcissement dans RÉEXÉCUTION)
+          const _categoryNode = activeToggleStack.length > 0
+            ? activeToggleStack[0].savedRootNode
+            : inlineRootNode;
+          const _cat = (window.treeData.choix || []).find((c) => c.suite === _categoryNode);
+          vars.__category = _cat ? _cat.id : "";
+
+          const leaf = getDeepestNode();
+          if (leaf && Array.isArray(leaf.leafQuestions)) {
+            leaf.leafQuestions.forEach((q) => {
+              if (!contextMatches(q.conditions, vars)) {
+                delete vars[q.id];
+                if (Array.isArray(q.inputsOnYes)) {
+                  q.inputsOnYes.forEach((inp) => {
+                    delete vars[inp.id];
+                  });
+                }
+              }
+            });
+          }
+
+          const levels = inlineRootNode ? [inlineRootNode, ...inlineChain.map((s) => s.node)] : [];
+          levels.forEach((levelNode, idx) => {
+            if (!levelNode || !levelNode.choicesTitle) return;
+            const slug = levelNode.choicesTitle
+              .toLowerCase()
+              .replace(/[^a-z0-9]+/g, "-")
+              .replace(/^-|-$/g, "");
+            const choice = inlineChain[idx];
+            if (!choice) return;
+            const parts = splitMotifLabel(choice.label || "");
+            vars[`${slug}-id`] = choice.id || "";
+            vars[`${slug}-label`] = choice.label || "";
+            vars[`${slug}-code`] = parts.code;
+            vars[`${slug}-text`] = parts.text;
+            // Abréviation dépendante du STATUT (pour sous-motifs avec abbrevAC / abbrevPL)
+            const opt = choice.option || {};
+            if (vars.statut === "A/C" && opt.abbrevAC) {
+              vars[`${slug}-abbrev`] = opt.abbrevAC;
+            } else if (vars.statut === "PL" && opt.abbrevPL) {
+              vars[`${slug}-abbrev`] = opt.abbrevPL;
+            }
+          });
+
+          return vars;
+        }
+
+        function getDeepestNode() {
+          const lastChainEntry = inlineChain[inlineChain.length - 1];
+          if (lastChainEntry && lastChainEntry.node) return lastChainEntry.node;
+          return inlineRootNode || getCurrentNode();
+        }
+
+        function pruneInlineChain() {
+          const vars = buildTemplateVars();
+          let validLength = 0;
+          for (let i = 0; i < inlineChain.length; i++) {
+            const parentNode = i === 0 ? inlineRootNode : inlineChain[i - 1].node;
+            if (!parentNode || !Array.isArray(parentNode.choix)) break;
+            const option = parentNode.choix.find((o) => o.id === inlineChain[i].id);
+            if (!option) break;
+            if (option.conditions && !contextMatches(option.conditions, vars)) break;
+            validLength = i + 1;
+          }
+          if (validLength < inlineChain.length) {
+            inlineChain = inlineChain.slice(0, validLength);
+          }
+        }
+
+        function findNextTarget() {
+          const vars = buildTemplateVars();
+          const leaf = getDeepestNode();
+          if (leaf && Array.isArray(leaf.leafQuestions) && leaf.leafQuestions.length > 0) {
+            let allAnswered = true;
+            for (const q of leaf.leafQuestions) {
+              if (!contextMatches(q.conditions, vars)) continue;
+              if (leafAnswers[q.id] == null) {
+                // Plus de scroll auto vers la carte DRETAF/SUSPEN non répondue.
+                // (Comportement précédent jugé perturbant.)
+                allAnswered = false;
+                continue;
+              }
+              if (leafAnswers[q.id] === "oui" && Array.isArray(q.inputsOnYes)) {
+                for (const inp of q.inputsOnYes) {
+                  if (!leafInputs[inp.id]) {
+                    return { type: "input", id: `leafInput-${inp.id}` };
+                  }
+                }
+              }
+            }
+            if (allAnswered) return { type: "element", id: "resultsContainer" };
+            return null;
+          }
+          if (leaf && Array.isArray(leaf.resultats) && leaf.resultats.length > 0) {
+            return { type: "element", id: "resultsContainer" };
+          }
+          if (inlineRootNode) {
+            return { type: "element", id: `cascade-level-${inlineChain.length}` };
+          }
+          return null;
+        }
+
+        function scrollToTarget(target) {
+          if (!target) return;
+          // Ne scrolle que si la cible change (évite de renvoyer aux résultats quand on réédite)
+          if (target.id === lastScrollTargetId) return;
+          lastScrollTargetId = target.id;
+          requestAnimationFrame(() => {
+            const el = document.getElementById(target.id);
+            if (!el) return;
+            el.scrollIntoView({ behavior: "auto", block: "center" });
+            if (target.type === "input" && typeof el.focus === "function") el.focus();
+          });
+        }
+
+        function renderBreadcrumbs() {
+          breadcrumbs.innerHTML = "";
+          let visibleCount = 0;
+
+          if (inlineRootNode && trail.length === 1) {
+            breadcrumbsSection.classList.add("hidden");
+            return;
+          }
+
+          trail.forEach((item, index) => {
+            if (index === 0) {
+              return;
+            }
+
+            visibleCount += 1;
+
+            const isLast = index === trail.length - 1;
+
+            const crumb = document.createElement("button");
+            crumb.type = "button";
+            crumb.className = isLast
+              ? "font-bold text-strong cursor-default"
+              : "text-muted hover:text-strong underline decoration-dotted";
+            crumb.textContent = item.label;
+
+            if (!isLast) {
+              crumb.addEventListener("click", () => {
+                trail = trail.slice(0, index + 1);
+                render();
+              });
+            } else {
+              crumb.disabled = true;
+            }
+
+            breadcrumbs.appendChild(crumb);
+
+            if (!isLast) {
+              const sep = document.createElement("span");
+              sep.className = "text-muted";
+              sep.textContent = ">";
+              breadcrumbs.appendChild(sep);
+            }
+          });
+
+          breadcrumbsSection.classList.toggle("hidden", visibleCount === 0);
+        }
+
+        function renderQuestion(node) {
+          inlineTitleContainer.innerHTML = "";
+
+          if (inlineRootNode) {
+            questionZone.innerHTML = "";
+            return;
+          }
+
+          if (!node.question) {
+            questionZone.innerHTML = "";
+            return;
+          }
+
+          questionZone.innerHTML = `
+            <div class="fade-in rounded-2xl surface-shell border p-5 shadow-sm text-center">
+              <h2 class="text-base md:text-lg font-bold text-muted">${escapeHtml(node.question)}</h2>
+            </div>
+          `;
+        }
+
+        function renderToggles() {
+          togglesContainer.innerHTML = "";
+
+          // Helper pour créer une card-row toggle avec un seul bouton
+          const buildToggleCard = (toggle, isOn, onClick) => {
+            const card = document.createElement("section");
+            card.className = "card-row";
+            const content = document.createElement("div");
+            content.className = "card-row-content";
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = `context-option pill-btn ${isOn ? "is-selected" : ""}`;
+            btn.textContent = toggle.label || "";
+            btn.addEventListener("click", onClick);
+            content.appendChild(btn);
+            card.appendChild(content);
+            return card;
+          };
+
+          // 1. Toggles déjà activés (du stack), affichés sélectionnés
+          activeToggleStack.forEach((entry, idx) => {
+            const card = buildToggleCard(entry.toggle, true, () => {
+              // Désactivation : restore au savedRootNode de cette entrée et
+              // pop tout depuis cet idx.
+              inlineRootNode = entry.savedRootNode;
+              activeToggleStack = activeToggleStack.slice(0, idx);
+              inlineChain = [];
+              leafAnswers = {};
+              leafInputs = {};
+              render();
+            });
+            togglesContainer.appendChild(card);
+          });
+
+          // 2. Toggles disponibles dans le inlineRootNode courant (non encore activés)
+          if (inlineRootNode && Array.isArray(inlineRootNode.toggles)) {
+            inlineRootNode.toggles.forEach((toggle) => {
+              if (activeToggleStack.some((e) => e.toggle.id === toggle.id)) return;
+              const card = buildToggleCard(toggle, false, () => {
+                // Activation : push dans le stack et swap inlineRootNode
+                activeToggleStack.push({
+                  savedRootNode: inlineRootNode,
+                  toggle: toggle,
+                });
+                inlineRootNode = toggle.whenOn;
+                inlineChain = [];
+                leafAnswers = {};
+                leafInputs = {};
+                render();
+              });
+              togglesContainer.appendChild(card);
+            });
+          }
+
+          // 3. Top questions liées aux toggles (stack + inlineRootNode si toggle actif).
+          //    Les topQuestions des nœuds de la cascade (ex: motif-12 → FICOBA) sont
+          //    rendues plus bas par renderCascade, à leur niveau.
+          //    Re-cliquer sur la valeur sélectionnée la désélectionne (retour défaut).
+          if (activeToggleStack.length > 0) {
+            const topQuestionSources = new Set();
+            activeToggleStack.forEach((entry) => topQuestionSources.add(entry.toggle.whenOn));
+            if (inlineRootNode) topQuestionSources.add(inlineRootNode);
+
+            const seenTopQuestionIds = new Set();
+            topQuestionSources.forEach((level) => {
+              if (!level || !Array.isArray(level.topQuestions)) return;
+              level.topQuestions.forEach((q) => {
+                if (seenTopQuestionIds.has(q.id)) return;
+                seenTopQuestionIds.add(q.id);
+                togglesContainer.appendChild(createTopQuestionCard(q));
+              });
+            });
+          }
+        }
+
+        // Crée une card-row pour une topQuestion (label + boutons OUI/NON).
+        // Re-cliquer sur la valeur sélectionnée la désélectionne (retour au défaut).
+        function createTopQuestionCard(q) {
+          const card = document.createElement("section");
+          card.className = "card-row";
+          const content = document.createElement("div");
+          content.className = "card-row-content";
+
+          const lbl = document.createElement("span");
+          lbl.className = "leaf-input-label";
+          lbl.textContent = q.label || "";
+          content.appendChild(lbl);
+
+          const currentAnswer = topAnswers[q.id];
+          ["oui", "non"].forEach((val) => {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.textContent = val.toUpperCase();
+            btn.className = `context-option pill-btn ${currentAnswer === val ? "is-selected" : ""}`;
+            btn.addEventListener("click", () => {
+              if (topAnswers[q.id] === val) {
+                delete topAnswers[q.id];
+              } else {
+                topAnswers[q.id] = val;
+              }
+              render();
+            });
+            content.appendChild(btn);
+          });
+
+          card.appendChild(content);
+          return card;
+        }
+
+        // Crée juste l'élément <input> ou <textarea> avec ses listeners.
+        function createFieldElement(input) {
+          const value = nodeInputs[input.id] || "";
+          let field;
+          if ((input.type || "text") === "image") {
+            // Zone de paste d'image. Tu peux soit cliquer dans la zone et faire Ctrl+V,
+            // soit coller depuis n'importe où sur la page (le listener global capture).
+            // La data URL est stockée dans nodeInputs.
+            field = document.createElement("div");
+            field.className = "image-paste-zone";
+            field.tabIndex = 0;
+            field.style.position = "relative";
+
+            const img = document.createElement("img");
+            img.alt = "";
+            const placeholder = document.createElement("span");
+            placeholder.className = "image-placeholder";
+            placeholder.textContent = input.placeholder || "Coller une image (Ctrl+V) — peu importe où sur la page";
+
+            // Bouton ✕ pour supprimer l'image (visible seulement quand une image est là)
+            const closeBtn = document.createElement("button");
+            closeBtn.type = "button";
+            closeBtn.textContent = "✕";
+            closeBtn.title = "Supprimer l'image";
+            closeBtn.style.cssText =
+              "position: absolute; top: 0.5rem; right: 0.5rem;" +
+              "width: 1.75rem; height: 1.75rem; border-radius: 0.375rem;" +
+              "border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.55);" +
+              "color: white; cursor: pointer; font-weight: 700; line-height: 1;" +
+              "display: flex; align-items: center; justify-content: center;";
+            closeBtn.addEventListener("click", (e) => {
+              e.stopPropagation();
+              delete nodeInputs[input.id];
+              refresh();
+              render();
+            });
+
+            const refresh = () => {
+              const v = nodeInputs[input.id];
+              if (v) {
+                img.src = v;
+                if (!field.contains(img)) field.appendChild(img);
+                if (!field.contains(closeBtn)) field.appendChild(closeBtn);
+                if (field.contains(placeholder)) field.removeChild(placeholder);
+              } else {
+                if (field.contains(img)) field.removeChild(img);
+                if (field.contains(closeBtn)) field.removeChild(closeBtn);
+                if (!field.contains(placeholder)) field.appendChild(placeholder);
+              }
+            };
+            refresh();
+
+            // Paste local sur la zone (équivalent au listener global, mais redondant
+            // pour le cas où l'user clique exprès dans la zone avant de coller)
+            field.addEventListener("paste", (e) => {
+              e.preventDefault();
+              const items = (e.clipboardData || window.clipboardData).items || [];
+              for (const item of items) {
+                if (item.type && item.type.startsWith("image/")) {
+                  const blob = item.getAsFile();
+                  const reader = new FileReader();
+                  reader.onload = () => {
+                    saveNodeInputValue(input.id, reader.result);
+                    refresh();
+                    renderResults(getDeepestNode());
+                  };
+                  reader.readAsDataURL(blob);
+                  return;
+                }
+              }
+            });
+
+            field.addEventListener("click", (e) => {
+              if (e.target !== closeBtn) field.focus();
+            });
+            field.setAttribute("data-input-id", input.id);
+            return field;
+          }
+          if ((input.type || "text") === "textarea") {
+            field = document.createElement("textarea");
+            field.className = "card-textarea";
+            field.placeholder = input.placeholder || "";
+            field.value = value;
+            field.rows = 4;
+            if (input.transform === "ecritures-compte") {
+              field.addEventListener("paste", (e) => {
+                e.preventDefault();
+                const pasted = (e.clipboardData || window.clipboardData).getData("text");
+                const cleaned = cleanEcritures(pasted);
+                const start = field.selectionStart;
+                const end = field.selectionEnd;
+                const before = field.value.substring(0, start);
+                const after = field.value.substring(end);
+                field.value = before + cleaned + after;
+                const cursorPos = start + cleaned.length;
+                field.selectionStart = field.selectionEnd = cursorPos;
+                field.dispatchEvent(new Event("input", { bubbles: true }));
+              });
+            }
+          } else {
+            field = document.createElement("input");
+            field.type = input.type || "text";
+            field.className = "card-input";
+            field.placeholder = input.placeholder || "";
+            field.value = value;
+          }
+
+          field.setAttribute("data-input-id", input.id);
+          field.addEventListener("input", (event) => {
+            saveNodeInputValue(input.id, event.target.value);
+            renderResults(getDeepestNode());
+          });
+          return field;
+        }
+
+        // Crée une card-row pour un input (text ou textarea), label à gauche.
+        function createInputCard(input) {
+          const card = document.createElement("div");
+          card.className = "card-row";
+
+          const lbl = document.createElement("div");
+          lbl.className = "card-row-label";
+          lbl.textContent = input.label || "";
+          card.appendChild(lbl);
+
+          const content = document.createElement("div");
+          content.className = "card-row-content";
+          content.appendChild(createFieldElement(input));
+          card.appendChild(content);
+          return card;
+        }
+
+        // Crée une card-row pour les choix d'un niveau de cascade.
+        function createChoiceCard(levelNode, visibleChoix, levelIdx, isInline, vars) {
+          const isMotifLayout = !!(levelNode.choicesTitle && levelNode.choicesTitle.toUpperCase().includes("MOTIF"));
+          const isSousMotif = !!(levelNode.choicesTitle && levelNode.choicesTitle.toUpperCase().includes("SOUS"));
+          const hideMotifCode = isSousMotif && globalSelections.statut === "PL";
+          const selectionKey = levelNode.choicesTitle || levelNode.question || "default";
+          const selectedIdAtLevel = isInline
+            ? (inlineChain[levelIdx] ? inlineChain[levelIdx].id : null)
+            : nodeSelections[selectionKey];
+
+          const card = document.createElement("section");
+          card.id = `cascade-level-${levelIdx}`;
+          card.className = "card-row";
+
+          const labelEl = document.createElement("div");
+          labelEl.className = "card-row-label";
+          labelEl.textContent = levelNode.choicesTitle || "";
+          card.appendChild(labelEl);
+
+          const content = document.createElement("div");
+          content.className = "card-row-content";
+
+          visibleChoix.forEach((option) => {
+            const empty = isChoiceEmpty(option);
+            const isSelected = selectedIdAtLevel === option.id;
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = `context-option pill-btn ${isSelected ? "is-selected" : ""} ${empty ? "empty-choice" : ""}`;
+
+            const rawLabel = option.label || "Choix sans nom";
+            let inner;
+
+            if (isMotifLayout) {
+              const parts = rawLabel.split(" - ");
+              if (parts.length >= 2) {
+                const code = escapeHtml(parts.shift());
+                const text = escapeHtml(parts.join(" "));
+                if (hideMotifCode) {
+                  inner = `<span class="motif-label"><span class="motif-text">${text}</span></span>`;
+                } else {
+                  inner = `<span class="motif-label"><span class="motif-code">${code}</span><span class="motif-text">${text}</span></span>`;
+                }
+              } else {
+                inner = `<span class="motif-label"><span class="motif-text">${escapeHtml(rawLabel)}</span></span>`;
+              }
+            } else {
+              inner = escapeHtml(rawLabel);
+            }
+
+            button.innerHTML = `${empty ? `<span class="empty-tag">TODO</span>` : ""}${inner}`;
+
+            button.addEventListener("click", () => {
+              if (empty) {
+                showToast("CHOIX NON ENCORE CODÉ");
+                return;
+              }
+
+              // Si l'option a defaultInputs, on pré-remplit (uniquement si vide).
+              // Ex: motif 13 → DATE auto-remplie avec la date du jour.
+              // defaultInputsConditions permet de limiter le pré-remplissage à un contexte
+              // (ex: motif 14, on ne pré-remplit qu'en A/C, pas en PL où la date est BODACC).
+              if (option.defaultInputs && typeof option.defaultInputs === "object") {
+                const conditionsOk =
+                  !option.defaultInputsConditions ||
+                  contextMatches(option.defaultInputsConditions, buildTemplateVars());
+                if (conditionsOk) {
+                  Object.entries(option.defaultInputs).forEach(([inputId, val]) => {
+                    if (nodeInputs[inputId]) return; // ne pas écraser une saisie existante
+                    if (val === "today") {
+                      const _now = new Date();
+                      nodeInputs[inputId] =
+                        String(_now.getDate()).padStart(2, "0") + "/" +
+                        String(_now.getMonth() + 1).padStart(2, "0") + "/" +
+                        String(_now.getFullYear()).slice(-2);
+                    } else {
+                      nodeInputs[inputId] = val;
+                    }
+                  });
+                }
+              }
+
+              if (isInline) {
+                const nextNode = option.suite && typeof option.suite === "object" ? option.suite : null;
+                inlineChain = inlineChain.slice(0, levelIdx).concat([{ id: option.id, label: option.label, option: option, node: nextNode }]);
+                render();
+                return;
+              }
+              if (trail.length === 1 && option.suite && typeof option.suite === "object") {
+                inlineRootNode = option.suite;
+                inlineChain = [];
+                render();
+                return;
+              }
+              if (option.suite && typeof option.suite === "object") {
+                inlineRootNode = null;
+                inlineChain = [];
+                trail.push({
+                  label: option.label || "Etape",
+                  node: option.suite,
+                });
+                render();
+              }
+            });
+
+            content.appendChild(button);
+          });
+
+          card.appendChild(content);
+          return card;
+        }
+
+        // Rendu unifié de la cascade : pour chaque niveau, on rend d'abord les
+        // inputs (DATE, ÉCRITURES…) puis les choix (MOTIF, RAISON…).
+        // C'est ce qui permet à ÉCRITURES (input du niveau verse-oui) de s'intercaler
+        // entre VERSEMENT RÉCENT (choix du niveau racine) et RAISON (choix du verse-oui).
+        function renderCascade() {
+          cascadeFlow.innerHTML = "";
+
+          const isInline = !!inlineRootNode;
+          if (!isInline && trail.length === 1) return;
+
+          const vars = buildTemplateVars();
+          const rootNode = isInline ? inlineRootNode : getCurrentNode();
+          const cascade = isInline
+            ? [rootNode, ...inlineChain.map((step) => step.node).filter(Boolean)]
+            : [rootNode];
+
+          cascade.forEach((levelNode, levelIdx) => {
+            if (!levelNode) return;
+
+            // 1. Inputs du niveau, filtrés par conditions et dédupliqués par id.
+            //    Si plusieurs inputs ont le même id (avec conditions différentes),
+            //    le dernier qui matche gagne (override de label/placeholder).
+            //    Cas type : motif 14 PL → "date" devient "DATE DE PARUTION JUGEMENT BODACC".
+            //    Les inputs avec `inline: true` consécutifs sont regroupés sur la même card-row.
+            if (Array.isArray(levelNode.inputs) && levelNode.inputs.length > 0) {
+              const inputsToRender = [];
+              const idToIdx = new Map();
+              levelNode.inputs.forEach((input) => {
+                if (input.conditions && !contextMatches(input.conditions, vars)) return;
+                if (idToIdx.has(input.id)) {
+                  inputsToRender[idToIdx.get(input.id)] = input;
+                } else {
+                  idToIdx.set(input.id, inputsToRender.length);
+                  inputsToRender.push(input);
+                }
+              });
+
+              let currentInlineContent = null;
+              inputsToRender.forEach((input) => {
+                if (input.inline) {
+                  if (!currentInlineContent) {
+                    const card = document.createElement("div");
+                    card.className = "card-row";
+                    const content = document.createElement("div");
+                    content.className = "card-row-content card-row-inline";
+                    card.appendChild(content);
+                    cascadeFlow.appendChild(card);
+                    currentInlineContent = content;
+                  }
+                  const wrap = document.createElement("span");
+                  wrap.className = "leaf-input-wrap";
+                  const lbl = document.createElement("span");
+                  lbl.className = "leaf-input-label";
+                  lbl.textContent = input.label || "";
+                  wrap.appendChild(lbl);
+                  wrap.appendChild(createFieldElement(input));
+                  currentInlineContent.appendChild(wrap);
+                } else {
+                  currentInlineContent = null;
+                  cascadeFlow.appendChild(createInputCard(input));
+                }
+              });
+            }
+
+            // 2. Choix du niveau (ex : MOTIF, VERSEMENT RÉCENT, RAISON)
+            if (Array.isArray(levelNode.choix) && levelNode.choix.length > 0) {
+              const visibleChoix = levelNode.choix.filter((option) =>
+                !option.conditions || contextMatches(option.conditions, vars)
+              );
+              if (visibleChoix.length > 0) {
+                cascadeFlow.appendChild(createChoiceCard(levelNode, visibleChoix, levelIdx, isInline, vars));
+              }
+            }
+
+            // 3. topQuestions du niveau (uniquement pour niveaux > 0 — le niveau 0
+            //    est déjà géré par renderToggles s'il vient d'un toggle activé).
+            //    Ex : FICOBA DISPONIBLE ? est sur motif-12-psa.suite (niveau 1),
+            //    rendu juste après les choix SOUS-MOTIF de ce niveau.
+            if (levelIdx > 0 && Array.isArray(levelNode.topQuestions) && levelNode.topQuestions.length > 0) {
+              levelNode.topQuestions.forEach((q) => {
+                cascadeFlow.appendChild(createTopQuestionCard(q));
+              });
+            }
+          });
+        }
+
+        function updateContextSelectionClasses(groupId, value) {
+          contextPanel
+            .querySelectorAll(`[data-context-group="${groupId}"]`)
+            .forEach((button) => {
+              button.classList.toggle(
+                "is-selected",
+                button.getAttribute("data-context-value") === value
+              );
+            });
+        }
+
+        function renderContextPanel() {
+          if (!globalContextOptions.length) {
+            contextPanel.innerHTML = "";
+            contextPanel.classList.add("hidden");
+            return;
+          }
+
+          contextPanel.classList.remove("hidden");
+          contextPanel.innerHTML = globalContextOptions
+            .map((group) => {
+              const selected = globalSelections[group.id] || "";
+              const buttons = group.choix
+                .map((value) => {
+                  const selectedClass = selected === value ? "is-selected" : "";
+                  return `
+                    <button
+                      type="button"
+                      class="context-option pill-btn ${selectedClass}"
+                      data-context-group="${escapeHtml(group.id)}"
+                      data-context-value="${escapeHtml(value)}"
+                    >${escapeHtml(value)}</button>
+                  `;
+                })
+                .join("");
+              return `
+                <div class="card-row">
+                  <div class="card-row-label">${escapeHtml(group.label)}</div>
+                  <div class="card-row-content">${buttons}</div>
+                </div>
+              `;
+            })
+            .join("");
+
+          contextPanel.querySelectorAll("[data-context-group]").forEach((button) => {
+            button.addEventListener("click", () => {
+              const groupId = button.getAttribute("data-context-group");
+              const value = button.getAttribute("data-context-value");
+
+              if (globalSelections[groupId] === value) {
+                return;
+              }
+
+              globalSelections[groupId] = value;
+              pruneInlineChain();
+              render();
+            });
+          });
+        }
+
+        function renderCategoryTabs() {
+          categoryTabs.innerHTML = "";
+          const categories = Array.isArray(window.treeData.choix) ? window.treeData.choix : [];
+
+          if (categories.length <= 1) {
+            categoryTabs.classList.add("hidden");
+            return;
+          }
+
+          categoryTabs.classList.remove("hidden");
+
+          const card = document.createElement("section");
+          card.className = "card-row";
+
+          const labelEl = document.createElement("div");
+          labelEl.className = "card-row-label";
+          labelEl.textContent = "CATÉGORIE";
+          card.appendChild(labelEl);
+
+          const content = document.createElement("div");
+          content.className = "card-row-content";
+
+          if (inlineRootNode) {
+            const back = document.createElement("button");
+            back.type = "button";
+            back.id = "inlineBackArrow";
+            back.className = "back-arrow-btn";
+            back.setAttribute("aria-label", "Retour");
+            back.textContent = "←";
+            back.addEventListener("click", () => {
+              inlineRootNode = null;
+              inlineChain = [];
+              leafAnswers = {};
+              leafInputs = {};
+              activeToggleStack = [];
+              topAnswers = {};
+              render();
+            });
+            content.appendChild(back);
+          }
+
+          categories.forEach((cat) => {
+            const pill = document.createElement("button");
+            pill.type = "button";
+            const isActive = !!(cat.suite && inlineRootNode === cat.suite);
+            pill.className = `context-option pill-btn ${isActive ? "is-selected" : ""}`;
+            pill.textContent = cat.label || "";
+            pill.addEventListener("click", () => {
+              if (isActive) return;
+              if (!cat.suite || typeof cat.suite !== "object") {
+                showToast("CATÉGORIE NON ENCORE CODÉE");
+                return;
+              }
+              inlineRootNode = cat.suite;
+              inlineChain = [];
+              leafAnswers = {};
+              leafInputs = {};
+              activeToggleStack = [];
+              topAnswers = {};
+              render();
+            });
+            content.appendChild(pill);
+          });
+
+          card.appendChild(content);
+          categoryTabs.appendChild(card);
+        }
+
+        function renderLeafQuestions() {
+          leafQuestionsContainer.innerHTML = "";
+          const leaf = getDeepestNode();
+          if (!leaf || !Array.isArray(leaf.leafQuestions) || leaf.leafQuestions.length === 0) return;
+
+          const vars = buildTemplateVars();
+
+          leaf.leafQuestions.forEach((q) => {
+            if (!contextMatches(q.conditions, vars)) return;
+
+            const card = document.createElement("section");
+            card.id = `leafQuestion-${q.id}`;
+            card.className = "card-row";
+
+            const labelEl = document.createElement("div");
+            labelEl.className = "card-row-label";
+            labelEl.textContent = q.label || q.id || "";
+            card.appendChild(labelEl);
+
+            const content = document.createElement("div");
+            content.className = "card-row-content";
+
+            const currentAnswer = leafAnswers[q.id];
+
+            // Par défaut OUI/NON ; supporte d'autres valeurs via q.choices (ex: ["ae", "ti"]).
+            const choices = Array.isArray(q.choices) && q.choices.length > 0
+              ? q.choices
+              : ["oui", "non"];
+            choices.forEach((val) => {
+              const btn = document.createElement("button");
+              btn.type = "button";
+              btn.textContent = String(val).toUpperCase();
+              btn.className = `context-option pill-btn ${currentAnswer === val ? "is-selected" : ""}`;
+              btn.addEventListener("click", () => {
+                if (leafAnswers[q.id] === val) return;
+                leafAnswers[q.id] = val;
+                if (val === "non" && Array.isArray(q.inputsOnYes)) {
+                  q.inputsOnYes.forEach((input) => {
+                    delete leafInputs[input.id];
+                  });
+                }
+                render();
+              });
+              content.appendChild(btn);
+            });
+
+            if (currentAnswer === "oui" && Array.isArray(q.inputsOnYes) && q.inputsOnYes.length > 0) {
+              q.inputsOnYes.forEach((input) => {
+                const wrap = document.createElement("span");
+                wrap.className = "leaf-input-wrap";
+
+                const lbl = document.createElement("span");
+                lbl.className = "leaf-input-label";
+                lbl.textContent = input.label || "";
+                wrap.appendChild(lbl);
+
+                const inputEl = document.createElement("input");
+                inputEl.id = `leafInput-${input.id}`;
+                inputEl.type = input.type || "text";
+                inputEl.placeholder = input.placeholder || "";
+                inputEl.value = leafInputs[input.id] || "";
+                inputEl.className = "card-input";
+                inputEl.addEventListener("input", (e) => {
+                  leafInputs[input.id] = e.target.value;
+                  renderResults(getDeepestNode());
+                });
+                inputEl.addEventListener("keydown", (e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    inputEl.blur();
+                  }
+                });
+                wrap.appendChild(inputEl);
+                content.appendChild(wrap);
+              });
+            }
+
+            card.appendChild(content);
+            leafQuestionsContainer.appendChild(card);
+          });
+        }
+
+        async function copyRichHtml(html, button) {
+          const originalText = button.textContent;
+          try {
+            const plainText = stripHtmlToText(html);
+            if (!navigator.clipboard || !window.ClipboardItem) {
+              await navigator.clipboard.writeText(plainText);
+            } else {
+              const item = new ClipboardItem({
+                "text/html": new Blob([html], { type: "text/html" }),
+                "text/plain": new Blob([plainText], { type: "text/plain" }),
+              });
+              await navigator.clipboard.write([item]);
+            }
+            button.textContent = "Copié !";
+            button.classList.add("copy-success");
+            setTimeout(() => {
+              button.textContent = originalText;
+              button.classList.remove("copy-success");
+            }, 1200);
+          } catch (err) {
+            console.error(err);
+            button.textContent = "Erreur copie";
+            setTimeout(() => {
+              button.textContent = originalText;
+            }, 1400);
+          }
+        }
+
+        function renderResults(node) {
+          resultsContainer.innerHTML = "";
+
+          if (!node || !Array.isArray(node.resultats) || node.resultats.length === 0) return;
+
+          const vars = buildTemplateVars();
+          const subBlocsById = {};
+          const resultBlocks = [];
+
+          // 1ère passe : enregistrer les fragments dans subBlocsById, indépendamment
+          // de leur position dans le tableau resultats. Comme ça les composites
+          // peuvent les référencer via "combine" même s'ils sont définis après.
+          node.resultats.forEach((res) => {
+            if (res.if && !contextMatches(res.if, vars)) return;
+            if ((res.type || "simple") !== "fragment") return;
+            if (res.id) {
+              const texte = substituteTemplate(res.texte || "", vars);
+              subBlocsById[res.id] = { id: res.id, texte };
+            }
+          });
+
+          // 2ème passe : construire les articles visibles (simple/multi/composite).
+          node.resultats.forEach((res) => {
+            if (res.if && !contextMatches(res.if, vars)) return;
+            const kind = res.type || "simple";
+
+            if (kind === "fragment") return; // déjà traité plus haut
+
+            if (kind === "simple") {
+              const texte = substituteTemplate(res.texte || "", vars);
+              const sub = { id: res.id || res.label, texte };
+              if (res.id) subBlocsById[res.id] = sub;
+              resultBlocks.push({
+                id: res.id || res.label || "",
+                label: res.label || "",
+                subBlocs: [sub],
+                source: res,
+              });
+            } else if (kind === "multi") {
+              const subs = (res.blocs || [])
+                .filter((b) => !b.if || contextMatches(b.if, vars))
+                .map((b) => {
+                  const texte = substituteTemplate(b.texte || "", vars);
+                  const sub = { id: b.id, texte };
+                  if (b.id) subBlocsById[b.id] = sub;
+                  return sub;
+                });
+              if (subs.length === 0) return;
+              resultBlocks.push({
+                id: res.id || res.label || "",
+                label: res.label || "",
+                subBlocs: subs,
+                source: res,
+              });
+            } else if (kind === "composite") {
+              const sep = res.separator != null ? res.separator : "\n";
+              const parts = (res.combine || [])
+                .map((refId) => subBlocsById[refId])
+                .filter(Boolean)
+                .map((sub) => sub.texte);
+              if (parts.length === 0) return;
+              let texte = parts.join(sep);
+              // Fragments append-only (séparateur différent du combine).
+              // Ex: WATT du motif 12 → "(Pas de FICOBA car site KO)" en suffixe
+              // avec "<br><br>" au lieu de "<br>+<br>".
+              if (Array.isArray(res.appendFragments)) {
+                const appendSep = res.appendSeparator != null ? res.appendSeparator : "\n";
+                res.appendFragments.forEach((refId) => {
+                  const sub = subBlocsById[refId];
+                  if (sub) texte += appendSep + sub.texte;
+                });
+              }
+              const sub = { id: res.id || res.label, texte };
+              if (res.id) subBlocsById[res.id] = sub;
+              resultBlocks.push({
+                id: res.id || res.label || "",
+                label: res.label || "",
+                subBlocs: [sub],
+                source: res,
+              });
+            }
+          });
+
+          for (let i = 0; i < resultBlocks.length; i++) {
+            const rb = resultBlocks[i];
+            const src = rb.source;
+            if (!src.mergeWithCompositeIfSingle) continue;
+            if (rb.subBlocs.length !== 1) continue;
+            const compIdx = resultBlocks.findIndex((o) => o.id === src.mergeWithCompositeIfSingle);
+            if (compIdx < 0) continue;
+            const comp = resultBlocks[compIdx];
+            if (comp.subBlocs.length === 1 && comp.subBlocs[0].texte === rb.subBlocs[0].texte) {
+              resultBlocks[i] = {
+                id: rb.id,
+                label: src.mergedLabel || `${rb.label} & ${comp.label}`,
+                subBlocs: rb.subBlocs,
+                source: rb.source,
+              };
+              resultBlocks.splice(compIdx, 1);
+              break;
+            }
+          }
+
+          resultBlocks.forEach((rb) => {
+            const card = document.createElement("article");
+            card.className = "result-card";
+
+            const header = document.createElement("div");
+            header.className = "result-header";
+            header.textContent = rb.label || "Résultat";
+            card.appendChild(header);
+
+            const body = document.createElement("div");
+            body.className = "result-body";
+
+            rb.subBlocs.forEach((sub) => {
+              const subWrap = document.createElement("div");
+              subWrap.className = "result-sub";
+
+              const content = document.createElement("div");
+              content.className = "result-content";
+              content.innerHTML = sub.texte || "";
+              subWrap.appendChild(content);
+
+              const copyBtn = document.createElement("button");
+              copyBtn.type = "button";
+              copyBtn.className = "pill-btn font-bold text-white shrink-0";
+              copyBtn.style.background = "var(--accent)";
+              copyBtn.textContent = "COPIER";
+              copyBtn.addEventListener("click", () => copyRichHtml(sub.texte || "", copyBtn));
+              subWrap.appendChild(copyBtn);
+
+              body.appendChild(subWrap);
+            });
+
+            card.appendChild(body);
+            resultsContainer.appendChild(card);
+          });
+        }
+
+        function render() {
+          // On capture la position de scroll avant le re-rendu pour la restaurer.
+          // Sinon le navigateur peut décaler la vue quand un élément (ex: input N° CO)
+          // disparaît du DOM et que la hauteur totale change.
+          const _scrollY = window.scrollY;
+
+          const node = getDisplayNode();
+          const deepestNode = getDeepestNode();
+
+          renderBreadcrumbs();
+          renderCategoryTabs();
+          renderQuestion(node);
+          renderContextPanel();
+          renderToggles();
+          renderCascade();
+          renderLeafQuestions();
+          renderResults(deepestNode);
+          // Plus de scroll auto ni de focus auto : l'utilisateur navigue à son rythme.
+
+          // Restauration de la position : on force avant ET après le reflow
+          // (au cas où le navigateur ajusterait après son recalcul de hauteur).
+          if (window.scrollY !== _scrollY) {
+            window.scrollTo(0, _scrollY);
+          }
+          requestAnimationFrame(() => {
+            if (window.scrollY !== _scrollY) {
+              window.scrollTo(0, _scrollY);
+            }
+          });
+        }
+
+        if (
+          Array.isArray(window.treeData.choix) &&
+          window.treeData.choix.length === 1 &&
+          window.treeData.choix[0].suite &&
+          typeof window.treeData.choix[0].suite === "object"
+        ) {
+          inlineRootNode = window.treeData.choix[0].suite;
+        }
+
+        // Construit une chaîne décrivant tous les choix actuels (utile pour
+        // copier-coller le chemin dans une conversation Claude).
+        // Format : "ACTIF + A/C + DÉLAI + REFUS - PAS DE PJ + MOIS=37 + DCA NON + PLUS50K OUI"
+        function getCurrentPathString() {
+          const parts = [];
+
+          // 1. Contexte global (COMPTE / STATUT)
+          (globalContextOptions || []).forEach((opt) => {
+            const v = globalSelections[opt.id];
+            if (v) parts.push(v);
+          });
+
+          // 2. Catégorie active : on retrouve son label en cherchant dans treeData
+          //    le choix dont la suite correspond au savedRootNode du 1er toggle ou
+          //    au inlineRootNode courant.
+          const categoryNode = activeToggleStack.length > 0
+            ? activeToggleStack[0].savedRootNode
+            : inlineRootNode;
+          if (categoryNode) {
+            const cat = (window.treeData.choix || []).find((c) => c.suite === categoryNode);
+            if (cat && cat.label) parts.push(cat.label);
+          }
+
+          // 3. Toggles activés (ex: AMIABLE RELDET, DETTE NON EXIGIBLE)
+          activeToggleStack.forEach((entry) => {
+            if (entry.toggle && entry.toggle.label) parts.push(entry.toggle.label);
+          });
+
+          // 4. Cascade (inlineChain : choix de MOTIF, SOUS-MOTIF, RAISON, etc.)
+          inlineChain.forEach((step) => {
+            if (step.label) parts.push(step.label);
+          });
+
+          // Helper : récupère les leafQuestions et inputs accessibles à tous les
+          // niveaux de l'arbre courant pour mapper id → label.
+          const idToLabel = {};
+          const collectLabels = (node) => {
+            if (!node) return;
+            if (Array.isArray(node.leafQuestions)) {
+              node.leafQuestions.forEach((q) => { idToLabel[q.id] = q.label || q.id; });
+            }
+            if (Array.isArray(node.inputs)) {
+              node.inputs.forEach((i) => { idToLabel[i.id] = i.label || i.id; });
+            }
+            if (Array.isArray(node.topQuestions)) {
+              node.topQuestions.forEach((q) => { idToLabel[q.id] = q.label || q.id; });
+            }
+          };
+          activeToggleStack.forEach((entry) => collectLabels(entry.toggle.whenOn));
+          if (inlineRootNode) collectLabels(inlineRootNode);
+          inlineChain.forEach((step) => collectLabels(step.node));
+
+          // Helper : ajoute "LABEL VAL" si val est oui/non/ae/ti, sinon "LABEL=VAL"
+          const fmt = (id, val) => {
+            const label = (idToLabel[id] || id).replace(/\s*\?\s*$/, "").trim();
+            const v = String(val).toUpperCase();
+            const isFlag = ["OUI", "NON", "AE", "TI"].includes(v);
+            return isFlag ? `${label} ${v}` : `${label}=${val}`;
+          };
+
+          // 5. Inputs remplis (DATE, MOIS, etc.)
+          Object.entries(nodeInputs).forEach(([id, val]) => {
+            if (val !== undefined && val !== "") parts.push(fmt(id, val));
+          });
+
+          // 6. LeafAnswers (DCA, plus50k, ae-ti, dretaf, suspen, ficoba, etc.)
+          Object.entries(leafAnswers).forEach(([id, val]) => {
+            if (val) parts.push(fmt(id, val));
+          });
+          Object.entries(leafInputs).forEach(([id, val]) => {
+            if (val) parts.push(fmt(id, val));
+          });
+
+          // 7. TopAnswers (compte-en-ligne, ficoba…)
+          Object.entries(topAnswers).forEach(([id, val]) => {
+            if (val) parts.push(fmt(id, val));
+          });
+
+          return parts.join(" + ") || "(aucun choix)";
+        }
+
+        // Trouve l'id du 1er input de type "image" présent dans la cascade courante.
+        function findActiveImageInputId() {
+          const isInline = !!inlineRootNode;
+          const cascade = isInline
+            ? [inlineRootNode, ...inlineChain.map((s) => s.node).filter(Boolean)]
+            : [getCurrentNode()];
+          for (const lvl of cascade) {
+            if (lvl && Array.isArray(lvl.inputs)) {
+              for (const inp of lvl.inputs) {
+                if (inp.type === "image") return inp.id;
+              }
+            }
+          }
+          return null;
+        }
+
+        // Listener paste GLOBAL : si une image est dans le clipboard et qu'un input
+        // de type "image" est actif dans la cascade courante, on capture l'image
+        // sans qu'il faille avoir cliqué dans la zone.
+        document.addEventListener("paste", (e) => {
+          const items = (e.clipboardData || window.clipboardData)?.items || [];
+          let imageItem = null;
+          for (const item of items) {
+            if (item.type && item.type.startsWith("image/")) {
+              imageItem = item;
+              break;
+            }
+          }
+          if (!imageItem) return;
+
+          const imageInputId = findActiveImageInputId();
+          if (!imageInputId) return;
+
+          e.preventDefault();
+          const blob = imageItem.getAsFile();
+          if (!blob) return;
+          const reader = new FileReader();
+          reader.onload = () => {
+            saveNodeInputValue(imageInputId, reader.result);
+            render();
+          };
+          reader.readAsDataURL(blob);
+        });
+
+        // Listener du bouton "📋 chemin"
+        const copyPathBtn = document.getElementById("copyPathBtn");
+        if (copyPathBtn) {
+          copyPathBtn.addEventListener("click", async () => {
+            const path = getCurrentPathString();
+            try {
+              await navigator.clipboard.writeText(path);
+              showToast("CHEMIN COPIÉ");
+            } catch (err) {
+              console.error(err);
+              showToast("ERREUR COPIE");
+            }
+          });
+        }
+
+        render();
+      })();
+    </script>
+  </body>
+</html>

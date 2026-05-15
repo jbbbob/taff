@@ -1,0 +1,17 @@
+# Configs Claude Code locales (personnelles à cette machine)
+.claude/
+
+# Documents Office — risque de données confidentielles
+*.docx
+*.xlsx
+*.pdf
+
+# Fichiers temporaires
+~$*
+*.tmp
+*.bak
+
+# OS
+Thumbs.db
+.DS_Store
+desktop.ini
