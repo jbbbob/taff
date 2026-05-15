@@ -907,7 +907,7 @@ amiableReldetToggle.whenOn.toggles = [detteNonExigibleToggle];
 // entre AMIABLE RELDET et DETTE NON EXIGIBLE. Par défaut non répondue (= comportement
 // "OUI implicite"). Si l'utilisateur répond NON, le moteur remplace globalement
 // "-> RELDET + formulaire de demande délai envoyé par SCRIBE" par
-// "-> RELDET fait en v2 car pas de compte en ligne ni de mail pour envoyé par SCRIBE".
+// "-> RELDET fait en v2 car pas de compte en ligne ni de mail pour envoyer par SCRIBE".
 amiableReldetToggle.whenOn.topQuestions = [
   {
     id: "compte-en-ligne",

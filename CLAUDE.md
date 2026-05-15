@@ -228,7 +228,7 @@ Calculées dans `buildTemplateVars()` à chaque rendu :
 
 Appliqué à TOUT le résultat HTML après substitution :
 1. **Date 4 chiffres → 2 chiffres** : `JJ/MM/AAAA` → `JJ/MM/AA`. Marche pour les inputs DATE et pour les écritures collées. **Skip dans la catégorie RÉEXÉCUTION** (où on veut au contraire 4 chiffres pour la date de prescription, via `{{date-prescription-full}}`).
-2. **Si `topAnswers["compte-en-ligne"] === "non"`** : remplace `… -> RELDET + formulaire de demande délai envoyé par SCRIBE` par `… -> RELDET fait en v2 car pas de compte en ligne ni de mail pour envoyé par SCRIBE`.
+2. **Si `topAnswers["compte-en-ligne"] === "non"`** : remplace `… -> RELDET + formulaire de demande délai envoyé par SCRIBE` par `… -> RELDET fait en v2 car pas de compte en ligne ni de mail pour envoyer par SCRIBE`.
 3. **Si `topAnswers["ficoba"] === "non"`** : remplace `ET RECH EOPPS + FICOBA RECENTE` par `ET RECH EOPPS RECENTE` (motif 12, A/C uniquement).
 
 ## Comportements spéciaux à connaître
